@@ -6,8 +6,7 @@
             ->orderBy('position')
             ->get();
         $hasChildren = $children->count() > 0;
-        $url = $item->url ?: '#';
-        $url = str_starts_with($url, 'http') || str_starts_with($url, '/') ? $url : '/' . ltrim($url, '/');
+        $url = $item->resolvedUrl();
     @endphp
     <li class="menu-item {{ $hasChildren ? 'menu-item-has-children' : '' }}">
         <a href="{{ $url }}" target="{{ $item->target ?: '_self' }}">
@@ -25,4 +24,3 @@
         @endif
     </li>
 @endforeach
-

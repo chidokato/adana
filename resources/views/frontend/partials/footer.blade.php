@@ -1,4 +1,4 @@
-﻿<footer class="bg-primary footer">
+<footer class="bg-primary footer">
     <div class="footer-top">
         <div class="container">
             <div class="row">
@@ -20,7 +20,7 @@
                     </div>
                 </div>
 
-                <div class="col-lg-3">
+                <div class="col-lg-2">
                     <div class="footer-links">
                         <div class="collapse mt-4">
                             <p class="font-weight-600 text-white mb-14 collapse-title justify-between" data-breakpoint="mobile">
@@ -28,23 +28,47 @@
                                 <span class="icon text-white hidden md-block">+</span>
                             </p>
                             <ul class="widget-links collapse-content md-hidden">
-                                @if(!empty($footerMenuItems) && $footerMenuItems->count())
-                                    @foreach($footerMenuItems as $item)
+                                @if(!empty($menuProductCategories) && $menuProductCategories->count())
+                                    @foreach($menuProductCategories as $category)
                                         <li>
-                                            <a href="{{ url($item->url ?: '/') }}" target="{{ $item->target ?: '_self' }}">
-                                                {{ $item->label }}
+                                            <a href="{{ route('frontend.products.category', $category->slug ?: $category->id) }}">
+                                                {{ $category->name }}
                                             </a>
                                         </li>
                                     @endforeach
                                 @else
-                                    <li><a href="#">Chua co menu footer</a></li>
+                                    <li><a href="javascript:void(0)">Chưa có danh mục sản phẩm</a></li>
                                 @endif
                             </ul>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-lg-4">
+                <div class="col-lg-2">
+                    <div class="footer-links">
+                        <div class="collapse mt-4">
+                            <p class="font-weight-600 text-white mb-14 collapse-title justify-between" data-breakpoint="mobile">
+                                MENU FOOTER
+                                <span class="icon text-white hidden md-block">+</span>
+                            </p>
+                            <ul class="widget-links collapse-content md-hidden">
+                                @if(!empty($footerMenuItems) && $footerMenuItems->count())
+                                    @foreach($footerMenuItems as $item)
+                                        <li>
+                                            <a href="{{ $item->resolvedUrl() }}" target="{{ $item->target ?: '_self' }}">
+                                                {{ $item->label }}
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                @else
+                                    <li><a href="javascript:void(0)">Chưa có menu footer</a></li>
+                                @endif
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3">
                     <div class="footer-contact">
                         <div>
                             @if(!empty($siteSetting->company_name))

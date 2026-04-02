@@ -11,16 +11,12 @@
     <link rel="stylesheet" href="{{ asset('site/assets/app.css') }}">
     <link rel="stylesheet" href="{{ asset('site/css/header.css') }}">
     <link rel="stylesheet" href="{{ asset('site/css/home.css') }}">
+    <link rel="stylesheet" href="{{ asset('site/css/pages.css') }}">
 	<meta property="og:image" content="{{ asset('site/assets/images/logo.png') }}">
 	<meta property="og:type" content="website">
     <!-- Favicon and Touch Icons  -->
     <link rel="shortcut icon" href="{{ !empty($siteSetting->favicon) ? asset($siteSetting->favicon) : asset('site/assets/images/favicon.png') }}">
     <link rel="apple-touch-icon-precomposed" href="{{ !empty($siteSetting->favicon) ? asset($siteSetting->favicon) : asset('site/assets/images/favicon.png') }}">
-    <style>
-        #wrapper {
-            width: 100%;
-        }
-    </style>
 </head>
 <body>
 	<!-- preloade -->
