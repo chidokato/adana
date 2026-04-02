@@ -31,14 +31,137 @@ h2, .h2 {
     object-fit: cover;
 }
 
+.home-about-section .row {
+    row-gap: 40px;
+}
+
+.home-about-box {
+    position: relative;
+    padding-right: 90px;
+    padding-bottom: 80px;
+}
+
+.home-about-box .main-img {
+    width: 100%;
+    min-height: 440px;
+    object-fit: cover;
+    display: block;
+}
+
+.home-about-box .sub-img {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: min(42%, 260px);
+    overflow: hidden;
+    border-radius: 20px;
+    padding: 14px;
+    background: #fff;
+    box-shadow: 0 25px 60px rgba(15, 23, 42, 0.14);
+}
+
+.home-about-box .sub-img img {
+    width: 100%;
+    display: block;
+    border-radius: 16px;
+}
+
+.home-about-content {
+    padding-left: 24px;
+}
+
+.home-about-content .intro-lead {
+    color: #5d6679;
+    line-height: 1.85;
+}
+
+.home-about-content .h5 {
+    margin-bottom: 0;
+    line-height: 1.55;
+}
+
+.home-about-contact img {
+    width: 52px;
+    height: 52px;
+    flex: 0 0 52px;
+}
+
+.home-view-all-btn {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 52px;
+    padding: 0 22px;
+    border: 1.5px solid #d8dee8;
+    border-radius: 16px;
+    background: #fff;
+    color: #111827;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1;
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+    transition: all 0.25s ease;
+}
+
+.home-view-all-btn svg {
+    width: 18px;
+    height: 18px;
+    flex: 0 0 18px;
+}
+
+.home-view-all-btn:hover {
+    border-color: #f97316;
+    background: #fff7ed;
+    color: #c2410c;
+    transform: translateY(-1px);
+}
+
+.home-view-all-btn:hover path {
+    fill: #c2410c;
+}
+
 @media (max-width: 768px) {
     .page-title {
         height: 70vh !important;
         min-height: 70vh !important;
     }
 
+    .home-about-box {
+        padding-right: 40px;
+        padding-bottom: 60px;
+    }
+
+    .home-about-box .main-img {
+        min-height: 320px;
+    }
+
+    .home-about-content {
+        padding-left: 0;
+    }
+
     .tp-showcase-slider-bg {
         background-position: center;
         background-size: cover;
+    }
+
+    .home-view-all-btn {
+        min-height: 48px;
+        padding: 0 18px;
+        font-size: 16px;
+        border-radius: 14px;
+    }
+}
+
+@media (max-width: 575px) {
+    .home-about-box {
+        padding-right: 0;
+        padding-bottom: 0;
+    }
+
+    .home-about-box .sub-img {
+        position: static;
+        width: 70%;
+        margin: -40px 0 0 auto;
     }
 }
