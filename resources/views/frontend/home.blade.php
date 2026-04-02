@@ -56,7 +56,7 @@
 			$introConfig = $homeConfigs->get('intro_section');
 			$companyName = $siteSetting->company_name ?? config('app.name', 'ADANA Group');
 			$homeAboutTitle = optional($aboutConfig)->title ?: optional($introConfig)->title ?: $companyName;
-			$homeAboutLead = optional($aboutConfig)->content ?: optional($introConfig)->content ?: optional($introConfig)->description ?: ($siteSetting->short_intro ?? 'ADANA Group cung cấp giải pháp trọn gói trong lĩnh vực HVAC, vật tư tiêu hao, hóa chất công nghiệp và gia công cơ khí theo yêu cầu.');
+			$homeAboutLead = optional($aboutConfig)->content ?: optional($introConfig)->content ?: optional($introConfig)->description ?: ('<p>' . e($siteSetting->short_intro ?? 'ADANA Group cung cấp giải pháp trọn gói trong lĩnh vực HVAC, vật tư tiêu hao, hóa chất công nghiệp và gia công cơ khí theo yêu cầu.') . '</p>');
 			$homeAboutMainImage = !empty(optional($aboutConfig)->image) ? asset(optional($aboutConfig)->image) : (!empty(optional($introConfig)->image) ? asset(optional($introConfig)->image) : asset('site/assets/images/pages/about-1.jpg'));
 			$homeAboutSubImage = asset('site/assets/images/pages/about-2.jpg');
 			$homePhone = $siteSetting->hotline ?? '0936 361 248';
@@ -67,8 +67,8 @@
 				<div class="row items-center">
 					<div class="col-lg-6">
 						<div class="home-about-box wow fadeIn" data-wow-delay="0.1s">
-							<img class="main-img radius-16" src="{{ $homeAboutMainImage }}" alt="{{ $homeAboutTitle }}">
-							<div class="sub-img wow fadeInUp" data-wow-delay="0.2s">
+							<img class="main-img radius-16 mb-32" src="{{ $homeAboutMainImage }}" alt="{{ $homeAboutTitle }}">
+							<div class="sub-img wow fadeInUp mb-32" data-wow-delay="0.2s">
 								<img src="{{ $homeAboutSubImage }}" alt="{{ $companyName }}">
 							</div>
 						</div>
@@ -77,39 +77,37 @@
 					<div class="col-lg-6">
 						<div class="home-about-content wow fadeInUp" data-wow-delay="0.2s">
 							<h2 class="font-weight-600 mb-20">{{ $homeAboutTitle }}</h2>
-							<p class="intro-lead mb-20">{{ $homeAboutLead }}</p>
-							<p class="intro-lead mb-28">
-								ADANA Group được thành lập với định hướng trở thành đầu mối cung cấp dịch vụ, thiết bị và vật tư đồng bộ cho nhà máy, tòa nhà và doanh nghiệp, giúp khách hàng triển khai nhanh hơn, vận hành ổn định hơn và tối ưu chi phí lâu dài.
-							</p>
+							<div class="intro-lead mb-20 text-justify">{!! $homeAboutLead !!}</div>
 
-							<ul class="flex flex-col gap-24 mb-32">
+							<ul class="flex flex-col gap-12 mb-20">
 								<li class="flex gap-12">
 									<img class="w-24 h-24" src="{{ asset('site/assets/icons/check.svg') }}" alt="check">
-									<p class="h5">Một đầu mối liên hệ cho nhiều hạng mục kỹ thuật, thiết bị và vật tư.</p>
+									<p class="h7">Một đầu mối liên hệ cho nhiều hạng mục kỹ thuật, thiết bị và vật tư.</p>
 								</li>
 								<li class="flex gap-12">
 									<img class="w-24 h-24" src="{{ asset('site/assets/icons/check.svg') }}" alt="check">
-									<p class="h5">Kết hợp dịch vụ, sản xuất, cung ứng và hậu mãi trong cùng hệ sinh thái.</p>
+									<p class="h7">Kết hợp dịch vụ, sản xuất, cung ứng và hậu mãi trong cùng hệ sinh thái.</p>
 								</li>
 								<li class="flex gap-12">
 									<img class="w-24 h-24" src="{{ asset('site/assets/icons/check.svg') }}" alt="check">
-									<p class="h5">Đồng hành cùng nhà máy, tòa nhà và doanh nghiệp bằng giải pháp sát nhu cầu thực tế.</p>
+									<p class="h7">Đồng hành cùng nhà máy, tòa nhà và doanh nghiệp bằng giải pháp sát nhu cầu thực tế.</p>
 								</li>
 							</ul>
 
 							<div class="flex gap-28 items-center flex-wrap">
-								<a href="{{ route('frontend.contact') }}" class="btn btn-primary btn-large font-weight-600">
-									Liên hệ ngay
-								</a>
+	                            <a href="http://localhost/www/adana/public/lien-he" class="btn btn-primary btn-large font-weight-600">
+	                                Liên hệ ngay
+	                            </a>
 
-								<a href="tel:{{ preg_replace('/\s+/', '', $homePhone) }}" class="home-about-contact flex gap-16">
-									<img src="{{ asset('site/assets/icons/PhoneCall-3.svg') }}" alt="PhoneCall">
-									<div class="mt2">
-										<span class="text-sm text-secondary">Tư vấn nhanh</span>
-										<p class="h4">{{ $homePhone }}</p>
-									</div>
-								</a>
-							</div>
+	                            <a href="tel:0936361248" class="flex gap-16">
+	                                <img src="http://localhost/www/adana/public/site/assets/icons/PhoneCall-3.svg" alt="PhoneCall">
+	                                <div class="mt2">
+	                                    <span class="text-sm text-secondary">Tư vấn nhanh</span>
+	                                    <p class="h4">0936361248</p>
+	                                </div>
+	                            </a>
+	                        </div>
+							
 						</div>
 					</div>
 				</div>
