@@ -2,17 +2,15 @@
 
 @section('content')
 @php
-    $currentUrl = isset($currentCategory)
-        ? route('frontend.products.category', $currentCategory->slug)
-        : route('frontend.products');
-    $selectedCategory = request('category');
-    $keyword = request('q');
     $startItem = $products->firstItem() ?? 0;
     $endItem = $products->lastItem() ?? 0;
     $totalItems = $products->total();
+    $sidebarMenuItems = collect($footerMenuItems ?? [])->flatMap(function ($item) {
+        $children = collect($item->children ?? []);
+        return $children->isNotEmpty() ? $children : collect([$item]);
+    })->take(12);
 @endphp
 
-<!-- breadcrumb -->
 <section class="background-light mb-32">
     <div class="container">
         <ul class="breadcrumb">
@@ -28,7 +26,6 @@
         </ul>
     </div>
 </section>
-<!-- breadcrumb -->
 
 <section class="pb-100">
     <div class="container">
@@ -42,14 +39,9 @@
                 <div class="col-xxl-5 col-6 flex items-center">
                     <div class="flex items-center gap-16 md-justify-between md-w-full">
                         <p class="md-hidden">Showing {{ $startItem }} - {{ $endItem }} of {{ $totalItems }} Listings</p>
-                        <button class="btn-filter hidden md-block" id="filterSidebarToggle">
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M3.125 6.87499H5.70312C5.84081 7.41275 6.15356 7.88939 6.59207 8.22976C7.03057 8.57014 7.56989 8.75489 8.125 8.75489C8.68011 8.75489 9.21943 8.57014 9.65793 8.22976C10.0964 7.88939 10.4092 7.41275 10.5469 6.87499H16.875C17.0408 6.87499 17.1997 6.80914 17.3169 6.69193C17.4342 6.57472 17.5 6.41575 17.5 6.24999C17.5 6.08423 17.4342 5.92526 17.3169 5.80805C17.1997 5.69084 17.0408 5.62499 16.875 5.62499H10.5469C10.4092 5.08723 10.0964 4.61059 9.65793 4.27021C9.21943 3.92984 8.68011 3.74509 8.125 3.74509C7.56989 3.74509 7.03057 3.92984 6.59207 4.27021C6.15356 4.61059 5.84081 5.08723 5.70312 5.62499H3.125C2.95924 5.62499 2.80027 5.69084 2.68306 5.80805C2.56585 5.92526 2.5 6.08423 2.5 6.24999C2.5 6.41575 2.56585 6.57472 2.68306 6.69193C2.80027 6.80914 2.95924 6.87499 3.125 6.87499ZM8.125 4.99999C8.37223 4.99999 8.6139 5.0733 8.81946 5.21065C9.02502 5.348 9.18524 5.54323 9.27985 5.77163C9.37446 6.00004 9.39921 6.25138 9.35098 6.49385C9.30275 6.73633 9.1837 6.95906 9.00888 7.13387C8.83407 7.30869 8.61134 7.42774 8.36886 7.47597C8.12639 7.5242 7.87505 7.49945 7.64665 7.40484C7.41824 7.31023 7.22301 7.15001 7.08566 6.94445C6.94831 6.73889 6.875 6.49722 6.875 6.24999C6.875 5.91847 7.0067 5.60053 7.24112 5.36611C7.47554 5.13169 7.79348 4.99999 8.125 4.99999ZM16.875 13.125H15.5469C15.4092 12.5872 15.0964 12.1106 14.6579 11.7702C14.2194 11.4298 13.6801 11.2451 13.125 11.2451C12.5699 11.2451 12.0306 11.4298 11.5921 11.7702C11.1536 12.1106 10.8408 12.5872 10.7031 13.125H3.125C2.95924 13.125 2.80027 13.1908 2.68306 13.308C2.56585 13.4253 2.5 13.5842 2.5 13.75C2.5 13.9157 2.56585 14.0747 2.68306 14.1919C2.80027 14.3091 2.95924 14.375 3.125 14.375H10.7031C10.8408 14.9127 11.1536 15.3894 11.5921 15.7298C12.0306 16.0701 12.5699 16.2549 13.125 16.2549C13.6801 16.2549 14.2194 16.0701 14.6579 15.7298C15.0964 15.3894 15.4092 14.9127 15.5469 14.375H16.875C17.0408 14.375 17.1997 14.3091 17.3169 14.1919C17.4342 14.0747 17.5 13.9157 17.5 13.75C17.5 13.5842 17.4342 13.4253 17.3169 13.308C17.1997 13.1908 17.0408 13.125 16.875 13.125ZM13.125 15C12.8778 15 12.6361 14.9267 12.4305 14.7893C12.225 14.652 12.0648 14.4568 11.9701 14.2283C11.8755 13.9999 11.8508 13.7486 11.899 13.5061C11.9472 13.2636 12.0663 13.0409 12.2411 12.8661C12.4159 12.6913 12.6387 12.5722 12.8811 12.524C13.1236 12.4758 13.3749 12.5005 13.6034 12.5951C13.8318 12.6897 14.027 12.85 14.1643 13.0555C14.3017 13.2611 14.375 13.5028 14.375 13.75C14.375 14.0815 14.2433 14.3995 14.0089 14.6339C13.7745 14.8683 13.4565 15 13.125 15Z" fill="#1C1C1C"/>
-                            </svg>
-                            Filters
-                        </button>
                     </div>
                 </div>
+
                 <div class="col-md-2 col-4 xl2-hidden">
                     <div class="flex items-center py-12 justify-center listing-tabs menu-tab">
                         <span class="item-menu active">
@@ -64,6 +56,7 @@
                         </span>
                     </div>
                 </div>
+
                 <div class="col-xxl-5 col-6">
                     <div class="flex items-center h-full gap-8 justify-end">
                         <p class="md-hidden">Sort Vehicles by</p>
@@ -74,17 +67,9 @@
                             </button>
                             <div class="core-dropdown__menu" id="coreDropdownMenu">
                                 <ul class="core-dropdown__list">
-                                    <li class="core-dropdown__item"><a href="#" class="core-dropdown__option" data-value="best-match">Best Match</a></li>
                                     <li class="core-dropdown__item"><a href="#" class="core-dropdown__option active" data-value="lowest-price">Lowest Price</a></li>
                                     <li class="core-dropdown__item"><a href="#" class="core-dropdown__option" data-value="highest-price">Highest Price</a></li>
-                                    <li class="core-dropdown__item"><a href="#" class="core-dropdown__option" data-value="lowest-mileage">Lowest Mileage</a></li>
-                                    <li class="core-dropdown__item"><a href="#" class="core-dropdown__option" data-value="highest-mileage">Highest Mileage</a></li>
-                                    <li class="core-dropdown__item"><a href="#" class="core-dropdown__option" data-value="nearest-location">Nearest Location</a></li>
-                                    <li class="core-dropdown__item"><a href="#" class="core-dropdown__option" data-value="best-deal">Best Deal</a></li>
-                                    <li class="core-dropdown__item"><a href="#" class="core-dropdown__option" data-value="newest-year">Newest Year</a></li>
-                                    <li class="core-dropdown__item"><a href="#" class="core-dropdown__option" data-value="oldest-year">Oldest Year</a></li>
                                     <li class="core-dropdown__item"><a href="#" class="core-dropdown__option" data-value="newest-listed">Newest Listed</a></li>
-                                    <li class="core-dropdown__item"><a href="#" class="core-dropdown__option" data-value="oldest-listed">Oldest Listed</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -164,7 +149,7 @@
                                     <div class="divider mb-15"></div>
 
                                     <div class="flex justify-between">
-                                        <p class="compare-details btn btn-small open-modal" data-modal-id="#CompareModal">
+                                        <p class="compare-details btn btn-small">
                                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <g clip-path="url(#clip0_13399_19575)">
                                                     <path d="M10 17.5C14.1421 17.5 17.5 14.1421 17.5 10C17.5 5.85786 14.1421 2.5 10 2.5C5.85786 2.5 2.5 5.85786 2.5 10C2.5 14.1421 5.85786 17.5 10 17.5Z" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -221,133 +206,59 @@
 
         <div class="listing-sidebar-right__filter">
             <div class="filter-sidebar-popup filter-sidebar-desktop md-hidden">
-                <form action="{{ $currentUrl }}" method="get">
-                    <div class="search-cars__select-wrapper mb-18">
-                        <div class="search-cars__select filter-select-dropdown" data-name="Brand">
-                            <label for="BrandSelectToggle" class="search-cars__label">Select Brand</label>
-                            <input type="checkbox" id="BrandSelectToggle" class="filter-select-dropdown__toggle">
-                            <label for="BrandSelectToggle" class="filter-select-dropdown__text">
-                                <span>{{ isset($currentCategory) ? $currentCategory->name : 'All Brand' }}</span>
-                            </label>
-                            <div class="filter-select-dropdown__menu">
-                                <div class="filter-select-dropdown__list">
-                                    @foreach(($filterCategories ?? collect()) as $category)
-                                        <label class="filter-checkbox">
-                                            <input type="radio" name="category" value="{{ $category->id }}" {{ (string) $selectedCategory === (string) $category->id ? 'checked' : '' }}>
-                                            <span>{{ $category->name }}</span>
-                                        </label>
-                                    @endforeach
+                <div class="sidebar-widget mb-24">
+                    <h4 class="mb-18">Danh mục sản phẩm</h4>
+                    <ul class="widget-links">
+                        @forelse($sidebarMenuItems as $item)
+                            <li>
+                                <a href="{{ $item->resolvedUrl() }}" target="{{ $item->target ?: '_self' }}">
+                                    {{ $item->label }}
+                                </a>
+                            </li>
+                        @empty
+                            <li><a href="{{ route('frontend.products') }}">Sản phẩm</a></li>
+                        @endforelse
+                    </ul>
+                </div>
+
+                <div class="sidebar-widget mb-24">
+                    <h4 class="mb-18">Sản phẩm mới nhất</h4>
+                    <div class="flex flex-col gap-16">
+                        @forelse(($latestProducts ?? collect()) as $latestProduct)
+                            <a href="{{ route('frontend.products.show', $latestProduct->slug) }}" class="post-style-3">
+                                <img class="post-style-3__img" src="{{ $latestProduct->thumbnail ? asset($latestProduct->thumbnail) : asset('data/no_image.jpg') }}" alt="{{ $latestProduct->title }}">
+                                <div class="post-style-3__content">
+                                    <p class="text-xs text-secondary mb-4">{{ optional($latestProduct->category)->name ?? 'Sản phẩm' }}</p>
+                                    <p class="h7 mb-4">{{ $latestProduct->title }}</p>
+                                    <span class="text-sm font-weight-600">
+                                        {{ $latestProduct->price !== null ? number_format((float) $latestProduct->price, 0, ',', '.') . ' đ' : 'Liên hệ' }}
+                                    </span>
                                 </div>
-                            </div>
-                        </div>
+                            </a>
+                        @empty
+                            <p class="text-secondary">Chưa có sản phẩm mới.</p>
+                        @endforelse
                     </div>
+                </div>
 
-                    <div class="search-cars__select-wrapper mb-18">
-                        <div class="search-cars__select filter-select-dropdown" data-name="Model">
-                            <label for="ModelSelectToggle" class="search-cars__label">Select Model</label>
-                            <input type="checkbox" id="ModelSelectToggle" class="filter-select-dropdown__toggle">
-                            <label for="ModelSelectToggle" class="filter-select-dropdown__text">
-                                <span>{{ $keyword ?: 'All Model' }}</span>
-                            </label>
-                            <div class="filter-select-dropdown__menu">
-                                <div class="filter-select-dropdown__list" style="padding:12px;">
-                                    <input type="text" name="q" value="{{ $keyword }}" class="input-normal" placeholder="Search model...">
+                <div class="sidebar-widget">
+                    <h4 class="mb-18">Tin tức mới nhất</h4>
+                    <div class="flex flex-col gap-16">
+                        @forelse(($latestNews ?? collect()) as $latestNewsItem)
+                            <a href="{{ route('frontend.news.show', $latestNewsItem->slug) }}" class="post-style-3">
+                                <img class="post-style-3__img" src="{{ $latestNewsItem->thumbnail ? asset($latestNewsItem->thumbnail) : asset('data/no_image.jpg') }}" alt="{{ $latestNewsItem->title }}">
+                                <div class="post-style-3__content">
+                                    <p class="text-xs text-secondary mb-4">{{ optional($latestNewsItem->created_at)->format('d/m/Y') }}</p>
+                                    <p class="h7 mb-4">{{ $latestNewsItem->title }}</p>
+                                    <span class="text-sm">{{ optional($latestNewsItem->category)->name ?? 'Tin tức' }}</span>
                                 </div>
-                            </div>
-                        </div>
+                            </a>
+                        @empty
+                            <p class="text-secondary">Chưa có tin tức mới.</p>
+                        @endforelse
                     </div>
-
-                    <div class="search-cars__select-wrapper mb-18">
-                        <div class="search-cars__select filter-select-dropdown" data-name="Body Style">
-                            <label for="BodyStyleToggle" class="search-cars__label">Body Style</label>
-                            <input type="checkbox" id="BodyStyleToggle" class="filter-select-dropdown__toggle">
-                            <label for="BodyStyleToggle" class="filter-select-dropdown__text">
-                                <span>{{ isset($currentCategory) ? $currentCategory->name : 'Sedan' }}</span>
-                            </label>
-                            <div class="filter-select-dropdown__menu">
-                                <div class="filter-select-dropdown__list">
-                                    @foreach(($filterCategories ?? collect()) as $category)
-                                        <label class="filter-checkbox">
-                                            <input type="radio" name="category" value="{{ $category->id }}" {{ (string) $selectedCategory === (string) $category->id ? 'checked' : '' }}>
-                                            <span>{{ $category->name }}</span>
-                                        </label>
-                                    @endforeach
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="search-cars__price-wrap mb-18">
-                        <p class="search-cars__label">Price & Payment</p>
-                        <div class="flex items-center gap-20 mb-18">
-                            <label class="radio style-3">
-                                <input type="radio" checked>
-                                <span>Full Price</span>
-                            </label>
-                            <label class="radio style-3">
-                                <input type="radio">
-                                <span>Monthly</span>
-                            </label>
-                        </div>
-                        <div class="flex justify-between">
-                            <div>
-                                <p class="text-secondary">Min price</p>
-                                <p class="h6">{{ $products->min('price') ? number_format((float) $products->min('price'), 0, ',', '.') . ' đ' : '$120' }}</p>
-                            </div>
-                            <div>
-                                <p class="text-secondary">Max price</p>
-                                <p class="h6">{{ $products->max('price') ? number_format((float) $products->max('price'), 0, ',', '.') . ' đ' : '$750' }}</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="search-cars__select-wrapper mb-18">
-                        <div class="search-cars__select filter-select-dropdown" data-name="Fuel Type">
-                            <label for="FuelTypeToggle" class="search-cars__label">Fuel Type</label>
-                            <input type="checkbox" id="FuelTypeToggle" class="filter-select-dropdown__toggle">
-                            <label for="FuelTypeToggle" class="filter-select-dropdown__text"><span>Fuel Type</span></label>
-                            <div class="filter-select-dropdown__menu">
-                                <div class="filter-select-dropdown__list">
-                                    <label class="filter-checkbox"><input type="checkbox"><span>Gasoline</span></label>
-                                    <label class="filter-checkbox"><input type="checkbox"><span>Diesel</span></label>
-                                    <label class="filter-checkbox"><input type="checkbox"><span>Electric</span></label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="search-cars__select-wrapper mb-18">
-                        <div class="search-cars__select filter-select-dropdown" data-name="Transmission">
-                            <label for="TransmissionToggle" class="search-cars__label">Transmission</label>
-                            <input type="checkbox" id="TransmissionToggle" class="filter-select-dropdown__toggle">
-                            <label for="TransmissionToggle" class="filter-select-dropdown__text"><span>Transmission</span></label>
-                            <div class="filter-select-dropdown__menu">
-                                <div class="filter-select-dropdown__list">
-                                    <label class="filter-checkbox"><input type="checkbox"><span>Manual</span></label>
-                                    <label class="filter-checkbox"><input type="checkbox"><span>Automatic</span></label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary btn-large w-full font-weight-600">Apply Filters</button>
-                </form>
+                </div>
             </div>
-        </div>
-    </div>
-
-    <div id="filterSidebar" class="filter-sidebar">
-        <div class="filter-sidebar__overlay"></div>
-        <div class="filter-sidebar__panel right-sidebar">
-            <div class="filter-sidebar__header bg-white">
-                <p class="h5">Advanced Search</p>
-                <button class="filter-sidebar__close" id="filterSidebarClose">
-                    <img src="{{ asset('site/assets/icons/X.svg') }}" alt="close">
-                </button>
-            </div>
-            <form action="{{ $currentUrl }}" method="get">
-                <div class="filter-sidebar__content filter-sidebar-mobile"></div>
-            </form>
         </div>
     </div>
 </section>

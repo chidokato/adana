@@ -7,6 +7,33 @@
         ? route('frontend.news.category', $currentNewsCategory->slug)
         : route('frontend.news');
     $recentPosts = $homeNews->take(4);
+    $sidebarCategories = collect([
+        [
+            'label' => 'All News',
+            'url' => route('frontend.news'),
+            'count' => $totalNewsCount ?? $newsList->total(),
+            'active' => !isset($currentNewsCategory),
+        ],
+    ])->merge(collect($newsCategories ?? [])->map(function ($category) use ($currentNewsCategory, $newsCategoryCounts) {
+        return [
+            'label' => $category->name,
+            'url' => route('frontend.news.category', $category->slug),
+            'count' => $newsCategoryCounts[$category->id] ?? 0,
+            'active' => isset($currentNewsCategory) && $currentNewsCategory->id === $category->id,
+        ];
+    }));
+    $sidebarRecentPosts = $recentPosts->map(function ($recent) {
+        return [
+            'url' => route('frontend.news.show', $recent->slug),
+            'image' => $recent->thumbnail ? asset($recent->thumbnail) : asset('data/no_image.jpg'),
+            'title' => \Illuminate\Support\Str::limit($recent->title, 60),
+            'meta' => [
+                ['text' => 'by Admin'],
+                ['text' => optional($recent->created_at)->format('M. d, Y')],
+                ['text' => optional($recent->category)->name ?? 'NEWS', 'class' => 'text-highlight uppercase text-underline'],
+            ],
+        ];
+    });
 @endphp
 
 <!-- breadcrumb -->
@@ -82,74 +109,16 @@
             @endif
         </div>
 
-        <div class="innerpage__sidebar">
-            <form action="{{ $currentUrl }}" method="get" class="widget-search w-full mb-34">
-                <input class="input-normal" type="text" name="q" id="search-header" value="{{ $keyword }}" placeholder="Search products..." />
-                <button type="submit" class="widget-search-btn">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <g clip-path="url(#clip0_13399_10504)">
-                            <path d="M10.5 18C14.6421 18 18 14.6421 18 10.5C18 6.35786 14.6421 3 10.5 3C6.35786 3 3 6.35786 3 10.5C3 14.6421 6.35786 18 10.5 18Z" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M15.8047 15.8047L21.0012 21.0012" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        </g>
-                        <defs>
-                            <clipPath id="clip0_13399_10504">
-                                <rect width="24" height="24" fill="white"/>
-                            </clipPath>
-                        </defs>
-                    </svg>
-                </button>
-            </form>
-
-            <p class="h4 mb-16">
-                Categories
-            </p>
-
-            <ul class="widget-categories mb-32">
-                <li>
-                    <a href="{{ route('frontend.news') }}" class="{{ !isset($currentNewsCategory) ? 'active' : '' }}">
-                        <span class="label">All News</span>
-                        <span>({{ $totalNewsCount ?? $newsList->total() }})</span>
-                    </a>
-                </li>
-                @foreach(($newsCategories ?? collect()) as $category)
-                    <li>
-                        <a href="{{ route('frontend.news.category', $category->slug) }}" class="{{ isset($currentNewsCategory) && $currentNewsCategory->id === $category->id ? 'active' : '' }}">
-                            <span class="label">{{ $category->name }}</span>
-                            <span>({{ $newsCategoryCounts[$category->id] ?? 0 }})</span>
-                        </a>
-                    </li>
-                @endforeach
-            </ul>
-
-            <div class="divider mb-32 w-full"></div>
-
-            <p class="h4 mb-16 capitalize">
-                Recent posts
-            </p>
-
-            <div class="mb-32">
-                @foreach($recentPosts as $recent)
-                    <a href="{{ route('frontend.news.show', $recent->slug) }}" class="recent-post overflow-hidden mb-16">
-                        <div class="image">
-                            <img class="post--img flex" src="{{ $recent->thumbnail ? asset($recent->thumbnail) : asset('data/no_image.jpg') }}" alt="{{ $recent->title }}">
-                        </div>
-                        <div class="content">
-                            <div class="flex gap-12 md-gap-6 justify-start mb-6">
-                                <span class="text-xs">by Admin</span>
-                                <span class="text-xs">{{ optional($recent->created_at)->format('M. d, Y') }}</span>
-                                <span class="text-xs text-highlight uppercase text-underline">{{ optional($recent->category)->name ?? 'NEWS' }}</span>
-                            </div>
-                            <p class="title h7">
-                                {{ \Illuminate\Support\Str::limit($recent->title, 60) }}
-                            </p>
-                        </div>
-                    </a>
-                    @if(!$loop->last)
-                        <div class="divider mb-16 w-full"></div>
-                    @endif
-                @endforeach
-            </div>
-        </div>
+        @include('frontend.partials.site-sidebar', [
+            'sidebarSearchAction' => $currentUrl,
+            'sidebarSearchName' => 'q',
+            'sidebarSearchValue' => $keyword,
+            'sidebarSearchPlaceholder' => 'Search products...',
+            'sidebarCategoryTitle' => 'Categories',
+            'sidebarCategories' => $sidebarCategories,
+            'sidebarRecentTitle' => 'Recent posts',
+            'sidebarRecentPosts' => $sidebarRecentPosts,
+        ])
     </div>
 </section>
 @endsection

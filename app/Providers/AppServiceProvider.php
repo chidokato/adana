@@ -74,6 +74,9 @@ class AppServiceProvider extends ServiceProvider
                 $footerItems = $footerMenu->items()
                     ->whereNull('parent_id')
                     ->where('status', 1)
+                    ->with(['children' => function ($query) {
+                        $query->where('status', 1)->orderBy('position');
+                    }])
                     ->orderBy('position')
                     ->get();
                 $view->with('footerMenuItems', $footerItems);

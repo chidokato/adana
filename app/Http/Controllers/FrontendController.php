@@ -31,6 +31,16 @@ class FrontendController extends Controller
             ->whereNull('parent_id')
             ->orderBy('name')
             ->get();
+        $latestProducts = Product::with('category')
+            ->where('status', 1)
+            ->latest('id')
+            ->take(4)
+            ->get();
+        $latestNews = News::with('category')
+            ->where('status', 1)
+            ->latest('id')
+            ->take(4)
+            ->get();
 
         $query = Product::with('category')
             ->where('status', 1)
@@ -55,6 +65,8 @@ class FrontendController extends Controller
             'pageTitle' => 'Sản phẩm',
             'products' => $products,
             'filterCategories' => $categories,
+            'latestProducts' => $latestProducts,
+            'latestNews' => $latestNews,
         ]);
     }
 
@@ -179,6 +191,16 @@ class FrontendController extends Controller
             ->whereNull('parent_id')
             ->orderBy('name')
             ->get();
+        $latestProducts = Product::with('category')
+            ->where('status', 1)
+            ->latest('id')
+            ->take(4)
+            ->get();
+        $latestNews = News::with('category')
+            ->where('status', 1)
+            ->latest('id')
+            ->take(4)
+            ->get();
 
         $query = Product::with('category')
             ->where('status', 1)
@@ -201,6 +223,8 @@ class FrontendController extends Controller
             'products' => $products,
             'currentCategory' => $category,
             'filterCategories' => $categories,
+            'latestProducts' => $latestProducts,
+            'latestNews' => $latestNews,
         ]);
     }
 
