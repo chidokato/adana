@@ -2,6 +2,7 @@
 
 @section('content')
 @php
+    $currentNewsCategory = $currentNewsCategory ?? null;
     $keyword = request('q');
     $currentUrl = isset($currentNewsCategory)
         ? route('frontend.news.category', $currentNewsCategory->slug)

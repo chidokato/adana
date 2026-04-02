@@ -76,11 +76,24 @@ class FrontendController extends Controller
             ->where('slug', $slug)
             ->where('status', 1)
             ->firstOrFail();
+        $latestProducts = Product::with('category')
+            ->where('status', 1)
+            ->where('id', '!=', $product->id)
+            ->latest('id')
+            ->take(4)
+            ->get();
+        $latestNews = News::with('category')
+            ->where('status', 1)
+            ->latest('id')
+            ->take(4)
+            ->get();
 
         return view('frontend.products.show', [
             'pageTitle' => $product->seo_title ?: $product->title,
             'pageDescription' => $product->seo_description ?: $product->description,
             'product' => $product,
+            'latestProducts' => $latestProducts,
+            'latestNews' => $latestNews,
         ]);
     }
 
@@ -128,11 +141,24 @@ class FrontendController extends Controller
             ->where('slug', $slug)
             ->where('status', 1)
             ->firstOrFail();
+        $latestProducts = Product::with('category')
+            ->where('status', 1)
+            ->latest('id')
+            ->take(4)
+            ->get();
+        $latestNews = News::with('category')
+            ->where('status', 1)
+            ->where('id', '!=', $news->id)
+            ->latest('id')
+            ->take(4)
+            ->get();
 
         return view('frontend.news.show', [
             'pageTitle' => $news->seo_title ?: $news->title,
             'pageDescription' => $news->seo_description ?: $news->description,
             'news' => $news,
+            'latestProducts' => $latestProducts,
+            'latestNews' => $latestNews,
         ]);
     }
 

@@ -2,13 +2,46 @@
 
 @section('content')
 @php
+    $currentCategory = $currentCategory ?? null;
     $startItem = $products->firstItem() ?? 0;
     $endItem = $products->lastItem() ?? 0;
     $totalItems = $products->total();
     $sidebarMenuItems = collect($footerMenuItems ?? [])->flatMap(function ($item) {
         $children = collect($item->children ?? []);
         return $children->isNotEmpty() ? $children : collect([$item]);
-    })->take(12);
+    })->take(12)->map(function ($item) use ($currentCategory) {
+        $resolvedUrl = $item->resolvedUrl();
+        $currentCategoryUrl = isset($currentCategory) ? route('frontend.products.category', $currentCategory->slug) : route('frontend.products');
+
+        return [
+            'label' => $item->label,
+            'url' => $resolvedUrl,
+            'target' => $item->target ?: '_self',
+            'active' => $resolvedUrl === $currentCategoryUrl,
+        ];
+    });
+    $sidebarRecentProducts = collect($latestProducts ?? [])->map(function ($latestProduct) {
+        return [
+            'url' => route('frontend.products.show', $latestProduct->slug),
+            'image' => $latestProduct->thumbnail ? asset($latestProduct->thumbnail) : asset('data/no_image.jpg'),
+            'title' => $latestProduct->title,
+            'meta' => [
+                ['text' => optional($latestProduct->category)->name ?? 'Sản phẩm'],
+                ['text' => $latestProduct->price !== null ? number_format((float) $latestProduct->price, 0, ',', '.') . ' đ' : 'Liên hệ', 'class' => 'font-weight-600'],
+            ],
+        ];
+    });
+    $sidebarRecentNews = collect($latestNews ?? [])->map(function ($latestNewsItem) {
+        return [
+            'url' => route('frontend.news.show', $latestNewsItem->slug),
+            'image' => $latestNewsItem->thumbnail ? asset($latestNewsItem->thumbnail) : asset('data/no_image.jpg'),
+            'title' => \Illuminate\Support\Str::limit($latestNewsItem->title, 60),
+            'meta' => [
+                ['text' => optional($latestNewsItem->created_at)->format('d/m/Y')],
+                ['text' => optional($latestNewsItem->category)->name ?? 'Tin tức', 'class' => 'text-highlight uppercase text-underline'],
+            ],
+        ];
+    });
 @endphp
 
 <section class="background-light mb-32">
@@ -206,58 +239,18 @@
 
         <div class="listing-sidebar-right__filter">
             <div class="filter-sidebar-popup filter-sidebar-desktop md-hidden">
-                <div class="sidebar-widget mb-24">
-                    <h4 class="mb-18">Danh mục sản phẩm</h4>
-                    <ul class="widget-links">
-                        @forelse($sidebarMenuItems as $item)
-                            <li>
-                                <a href="{{ $item->resolvedUrl() }}" target="{{ $item->target ?: '_self' }}">
-                                    {{ $item->label }}
-                                </a>
-                            </li>
-                        @empty
-                            <li><a href="{{ route('frontend.products') }}">Sản phẩm</a></li>
-                        @endforelse
-                    </ul>
-                </div>
-
-                <div class="sidebar-widget mb-24">
-                    <h4 class="mb-18">Sản phẩm mới nhất</h4>
-                    <div class="flex flex-col gap-16">
-                        @forelse(($latestProducts ?? collect()) as $latestProduct)
-                            <a href="{{ route('frontend.products.show', $latestProduct->slug) }}" class="post-style-3">
-                                <img class="post-style-3__img" src="{{ $latestProduct->thumbnail ? asset($latestProduct->thumbnail) : asset('data/no_image.jpg') }}" alt="{{ $latestProduct->title }}">
-                                <div class="post-style-3__content">
-                                    <p class="text-xs text-secondary mb-4">{{ optional($latestProduct->category)->name ?? 'Sản phẩm' }}</p>
-                                    <p class="h7 mb-4">{{ $latestProduct->title }}</p>
-                                    <span class="text-sm font-weight-600">
-                                        {{ $latestProduct->price !== null ? number_format((float) $latestProduct->price, 0, ',', '.') . ' đ' : 'Liên hệ' }}
-                                    </span>
-                                </div>
-                            </a>
-                        @empty
-                            <p class="text-secondary">Chưa có sản phẩm mới.</p>
-                        @endforelse
-                    </div>
-                </div>
-
-                <div class="sidebar-widget">
-                    <h4 class="mb-18">Tin tức mới nhất</h4>
-                    <div class="flex flex-col gap-16">
-                        @forelse(($latestNews ?? collect()) as $latestNewsItem)
-                            <a href="{{ route('frontend.news.show', $latestNewsItem->slug) }}" class="post-style-3">
-                                <img class="post-style-3__img" src="{{ $latestNewsItem->thumbnail ? asset($latestNewsItem->thumbnail) : asset('data/no_image.jpg') }}" alt="{{ $latestNewsItem->title }}">
-                                <div class="post-style-3__content">
-                                    <p class="text-xs text-secondary mb-4">{{ optional($latestNewsItem->created_at)->format('d/m/Y') }}</p>
-                                    <p class="h7 mb-4">{{ $latestNewsItem->title }}</p>
-                                    <span class="text-sm">{{ optional($latestNewsItem->category)->name ?? 'Tin tức' }}</span>
-                                </div>
-                            </a>
-                        @empty
-                            <p class="text-secondary">Chưa có tin tức mới.</p>
-                        @endforelse
-                    </div>
-                </div>
+                @include('frontend.partials.site-sidebar', [
+                    'sidebarCategoryTitle' => 'Danh mục sản phẩm',
+                    'sidebarCategories' => $sidebarMenuItems,
+                    'sidebarRecentTitle' => 'Sản phẩm mới nhất',
+                    'sidebarRecentPosts' => $sidebarRecentProducts,
+                    'sidebarAdditionalRecentSections' => [
+                        [
+                            'title' => 'Tin tức mới nhất',
+                            'posts' => $sidebarRecentNews,
+                        ],
+                    ],
+                ])
             </div>
         </div>
     </div>

@@ -7,6 +7,7 @@
     $sidebarRecentTitle = $sidebarRecentTitle ?? 'Recent posts';
     $sidebarCategories = collect($sidebarCategories ?? []);
     $sidebarRecentPosts = collect($sidebarRecentPosts ?? []);
+    $sidebarAdditionalRecentSections = collect($sidebarAdditionalRecentSections ?? []);
 @endphp
 
 <div class="innerpage__sidebar">
@@ -71,4 +72,36 @@
             @endforeach
         </div>
     @endif
+
+    @foreach($sidebarAdditionalRecentSections as $section)
+        @php
+            $sectionPosts = collect($section['posts'] ?? []);
+        @endphp
+        @if($sectionPosts->isNotEmpty())
+            <div class="divider mb-32 w-full"></div>
+            <p class="h4 mb-16 capitalize">{{ $section['title'] ?? 'Recent posts' }}</p>
+            <div class="mb-32">
+                @foreach($sectionPosts as $recent)
+                    <a href="{{ $recent['url'] ?? '#' }}" class="recent-post overflow-hidden mb-16">
+                        <div class="image">
+                            <img class="post--img flex" src="{{ $recent['image'] ?? asset('data/no_image.jpg') }}" alt="{{ $recent['title'] ?? 'post' }}">
+                        </div>
+                        <div class="content">
+                            @if(!empty($recent['meta']))
+                                <div class="flex gap-12 md-gap-6 justify-start mb-6">
+                                    @foreach($recent['meta'] as $meta)
+                                        <span class="text-xs {!! $meta['class'] ?? '' !!}">{{ $meta['text'] ?? '' }}</span>
+                                    @endforeach
+                                </div>
+                            @endif
+                            <p class="title h7">{{ $recent['title'] ?? '' }}</p>
+                        </div>
+                    </a>
+                    @if(!$loop->last)
+                        <div class="divider mb-16 w-full"></div>
+                    @endif
+                @endforeach
+            </div>
+        @endif
+    @endforeach
 </div>

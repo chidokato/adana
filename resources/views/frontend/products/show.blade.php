@@ -11,6 +11,39 @@
     $productPrice = $product->price !== null ? number_format((float) $product->price, 0, ',', '.') . ' đ' : 'Liên hệ';
     $description = trim(strip_tags($product->description ?: ''));
     $content = $product->content ?: $product->description;
+    $sidebarMenuItems = collect($footerMenuItems ?? [])->flatMap(function ($item) {
+        $children = collect($item->children ?? []);
+        return $children->isNotEmpty() ? $children : collect([$item]);
+    })->take(12)->map(function ($item) use ($product) {
+        return [
+            'label' => $item->label,
+            'url' => $item->resolvedUrl(),
+            'target' => $item->target ?: '_self',
+            'active' => optional($product->category)->slug && $item->resolvedUrl() === route('frontend.products.category', $product->category->slug),
+        ];
+    });
+    $sidebarRecentProducts = collect($latestProducts ?? [])->map(function ($latestProduct) {
+        return [
+            'url' => route('frontend.products.show', $latestProduct->slug),
+            'image' => $latestProduct->thumbnail ? asset($latestProduct->thumbnail) : asset('data/no_image.jpg'),
+            'title' => $latestProduct->title,
+            'meta' => [
+                ['text' => optional($latestProduct->category)->name ?? 'Sản phẩm'],
+                ['text' => $latestProduct->price !== null ? number_format((float) $latestProduct->price, 0, ',', '.') . ' đ' : 'Liên hệ', 'class' => 'font-weight-600'],
+            ],
+        ];
+    });
+    $sidebarRecentNews = collect($latestNews ?? [])->map(function ($latestNewsItem) {
+        return [
+            'url' => route('frontend.news.show', $latestNewsItem->slug),
+            'image' => $latestNewsItem->thumbnail ? asset($latestNewsItem->thumbnail) : asset('data/no_image.jpg'),
+            'title' => \Illuminate\Support\Str::limit($latestNewsItem->title, 60),
+            'meta' => [
+                ['text' => optional($latestNewsItem->created_at)->format('d/m/Y')],
+                ['text' => optional($latestNewsItem->category)->name ?? 'Tin tức', 'class' => 'text-highlight uppercase text-underline'],
+            ],
+        ];
+    });
 @endphp
 
 <section class="background-light">
@@ -245,6 +278,21 @@
                             Gửi yêu cầu tư vấn
                         </a>
                     </div>
+                </div>
+
+                <div class="listing-details--sidebar-box">
+                    @include('frontend.partials.site-sidebar', [
+                        'sidebarCategoryTitle' => 'Danh mục sản phẩm',
+                        'sidebarCategories' => $sidebarMenuItems,
+                        'sidebarRecentTitle' => 'Sản phẩm mới nhất',
+                        'sidebarRecentPosts' => $sidebarRecentProducts,
+                        'sidebarAdditionalRecentSections' => [
+                            [
+                                'title' => 'Tin tức mới nhất',
+                                'posts' => $sidebarRecentNews,
+                            ],
+                        ],
+                    ])
                 </div>
             </div>
         </div>
