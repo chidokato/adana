@@ -1,36 +1,31 @@
-﻿<tr>
-    <td>{{ $category->id }}</td>
+<tr>
     <td>
-        <span style="padding-left: {{ $level * 16 }}px;">
-            @if($level > 0)
-                └
-            @endif
-            {{ $category->name }}
-        </span>
-    </td>
-    <td>{{ $category->type === 'news' ? 'Tin tức' : 'Sản phẩm' }}</td>
-    <td>{{ $category->slug }}</td>
-    <td class="text-center">
-        <div class="custom-control custom-switch d-inline-block">
-            <input type="checkbox"
-                   class="custom-control-input js-toggle-category-status"
-                   id="catStatus{{ $category->id }}"
-                   data-url="{{ route('admin.categories.toggleStatus', $category) }}"
-                   {{ $category->status ? 'checked' : '' }}>
-            <label class="custom-control-label" for="catStatus{{ $category->id }}"></label>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox">
         </div>
     </td>
-    <td class="text-center">
-        <a href="{{ route('admin.categories.edit', $category) }}" class="btn btn-sm btn-warning">Sửa</a>
-        <form action="{{ route('admin.categories.destroy', $category) }}" method="POST" class="d-inline" onsubmit="return confirm('Xóa danh mục này?')">
+    <td>
+        <div class="d-flex align-items-center">
+            <span class="text-muted me-2">{{ str_repeat('- ', $level) }}</span>
+            <div class="fw-semibold">{{ $category->name }}</div>
+        </div>
+    </td>
+    <td>{{ $category->slug }}</td>
+    <td>
+        <span class="badge {{ $category->status ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger' }}">
+            {{ $category->status ? 'Hien thi' : 'An' }}
+        </span>
+    </td>
+    <td class="text-end">
+        <a href="{{ route('admin.categories.edit', $category) }}" class="btn btn-light btn-sm">Sua</a>
+        <form action="{{ route('admin.categories.destroy', $category) }}" method="POST" class="d-inline" onsubmit="return confirm('Ban co chac muon xoa category nay?')">
             @csrf
             @method('DELETE')
-            <button type="submit" class="btn btn-sm btn-danger">Xóa</button>
+            <button type="submit" class="btn btn-light btn-sm">Xoa</button>
         </form>
     </td>
 </tr>
-@if($category->children && $category->children->count())
-    @foreach($category->children->where('type', $category->type) as $child)
-        @include('admin.category.row', ['category' => $child, 'level' => $level + 1])
-    @endforeach
-@endif
+
+@foreach ($category->children as $child)
+    @include('admin.category.row', ['category' => $child, 'level' => $level + 1])
+@endforeach

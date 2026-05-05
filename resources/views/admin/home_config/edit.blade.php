@@ -1,19 +1,25 @@
 @extends('admin.layout.main')
 
-@section('content')
-<form method="POST" action="{{ route('admin.home-configs.update', $item) }}" enctype="multipart/form-data">
-    @csrf
-    @method('PUT')
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Sửa cấu hình trang chủ</h1>
-        <div>
-            <a href="{{ route('admin.home-configs.index') }}" class="btn btn-secondary">Quay lại</a>
-            <button type="submit" class="btn btn-primary">Lưu</button>
-        </div>
-    </div>
+@section('title', 'Cap nhat cau hinh trang chu')
+@section('page_title', 'Cap nhat cau hinh trang chu')
+@section('breadcrumb', 'Cap nhat cau hinh trang chu')
 
-    @include('admin.home_config.form')
-</form>
+@section('content')
+    @include('admin.partials.list-hero', [
+        'heroTitle' => 'Cap nhat cau hinh trang chu',
+        'heroSubtitle' => 'Chinh sua noi dung, hinh anh va thong tin section tren trang chu.',
+        'heroPrimaryForm' => 'home-config-form',
+        'heroPrimaryType' => 'submit',
+        'heroPrimaryLabel' => 'Luu cau hinh',
+        'heroSecondaryRoute' => route('admin.home-configs.index'),
+        'heroSecondaryLabel' => 'Quay lai',
+    ])
+
+    <form id="home-config-form" method="POST" action="{{ route('admin.home-configs.update', $item) }}" enctype="multipart/form-data">
+        @csrf
+        @method('PUT')
+        @include('admin.home_config.form')
+    </form>
 @endsection
 
 @section('js')

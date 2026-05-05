@@ -62,7 +62,7 @@
             </div>
 
             <div class="text-right">
-                <button type="submit" class="btn btn-primary">Cập nhật</button>
+                <button type="submit" class="btn btn-primary btn-admin-primary">Cập nhật</button>
             </div>
         </form>
     </div>
@@ -82,4 +82,3 @@
     }
 </script>
 @endsection
-

@@ -1,73 +1,22 @@
 @extends('admin.layout.main')
 
+@section('title', 'Them menu item')
+@section('page_title', 'Them menu item')
+@section('breadcrumb', 'Them menu item')
+
 @section('content')
-<div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Thêm menu item</h1>
-    <a href="{{ route('admin.menus.items.index', $menu) }}" class="btn btn-secondary">
-        <i class="fas fa-arrow-left mr-1"></i> Quay lại
-    </a>
-</div>
+    @include('admin.partials.list-hero', [
+        'heroTitle' => 'Them menu item',
+        'heroSubtitle' => 'Tao lien ket moi cho menu: ' . $menu->name,
+        'heroPrimaryForm' => 'menu-item-form',
+        'heroPrimaryType' => 'submit',
+        'heroPrimaryLabel' => 'Luu menu item',
+        'heroSecondaryRoute' => route('admin.menus.items.index', $menu),
+        'heroSecondaryLabel' => 'Quay lai',
+    ])
 
-<div class="card shadow mb-4">
-    <div class="card-body">
-        <form method="POST" action="{{ route('admin.menus.items.store', $menu) }}">
-            @csrf
-            <div class="form-group">
-                <label for="label">Tên hiển thị</label>
-                <input type="text" class="form-control" id="label" name="label" value="{{ old('label') }}" required>
-                @error('label')
-                    <small class="text-danger">{{ $message }}</small>
-                @enderror
-            </div>
-
-            <div class="form-group">
-                <label for="url">Đường link</label>
-                <input type="text" class="form-control" id="url" name="url" value="{{ old('url') }}">
-                @error('url')
-                    <small class="text-danger">{{ $message }}</small>
-                @enderror
-            </div>
-
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label for="parent_id">Menu cha</label>
-                    <select class="form-control" id="parent_id" name="parent_id">
-                        <option value="">-- Không --</option>
-                        @foreach($parents as $parent)
-                            <option value="{{ $parent->id }}" {{ old('parent_id') == $parent->id ? 'selected' : '' }}>
-                                {{ $parent->label }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="form-group col-md-6">
-                    <label for="target">Target</label>
-                    <select class="form-control" id="target" name="target">
-                        <option value="_self" {{ old('target') === '_self' ? 'selected' : '' }}>_self</option>
-                        <option value="_blank" {{ old('target') === '_blank' ? 'selected' : '' }}>_blank</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label for="position">Vị trí</label>
-                    <input type="number" class="form-control" id="position" name="position" value="{{ old('position', 0) }}">
-                </div>
-                <div class="form-group col-md-6">
-                    <label>Trạng thái</label>
-                    <div class="custom-control custom-switch">
-                        <input type="checkbox" class="custom-control-input" id="status" name="status" value="1" {{ old('status', '1') == '1' ? 'checked' : '' }}>
-                        <label class="custom-control-label" for="status">Bật</label>
-                    </div>
-                </div>
-            </div>
-
-            <div class="text-right">
-                <button type="submit" class="btn btn-primary">Lưu</button>
-            </div>
-        </form>
-    </div>
-</div>
+    <form id="menu-item-form" method="POST" action="{{ route('admin.menus.items.store', $menu) }}">
+        @csrf
+        @include('admin.menu_item.form', ['item' => null, 'menu' => $menu, 'parents' => $parents])
+    </form>
 @endsection
-

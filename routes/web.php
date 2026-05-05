@@ -43,10 +43,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
     // Auth
     Route::get('/', [AdminAuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AdminAuthController::class, 'login'])->name('login.submit');
+    Route::get('/auth/google', [AdminAuthController::class, 'redirectToGoogle'])->name('google.redirect');
+    Route::get('/auth/google/callback', [AdminAuthController::class, 'handleGoogleCallback'])->name('google.callback');
     Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout')->middleware('auth:admin');
 
     // Protected Admin
-    Route::middleware('auth:admin')->group(function () {
+    Route::middleware(['auth:admin', 'admin.active'])->group(function () {
         // Dashboard
         Route::get('/dashboard', [AdminAuthController::class, 'dashboard'])->name('dashboard');
 
@@ -62,7 +64,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         });
 
         // Admin Users
-        Route::prefix('users')->name('users.')->group(function () {
+        Route::prefix('users')->name('users.')->middleware('admin.role:admin')->group(function () {
             Route::get('/', [AdminUserController::class, 'index'])->name('index');
             Route::get('/create', [AdminUserController::class, 'create'])->name('create');
             Route::post('/', [AdminUserController::class, 'store'])->name('store');
@@ -93,7 +95,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         });
 
         // SEO Settings
-        Route::prefix('seo')->name('seo.')->group(function () {
+        Route::prefix('seo')->name('seo.')->middleware('admin.role:admin')->group(function () {
             Route::get('/', [SeoSettingController::class, 'index'])->name('index');
             Route::get('/create', [SeoSettingController::class, 'create'])->name('create');
             Route::post('/', [SeoSettingController::class, 'store'])->name('store');
@@ -103,11 +105,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
         });
 
         // Settings
-        Route::get('/settings', [SettingController::class, 'edit'])->name('settings.edit');
-        Route::put('/settings', [SettingController::class, 'update'])->name('settings.update');
+        Route::middleware('admin.role:admin')->group(function () {
+            Route::get('/settings', [SettingController::class, 'edit'])->name('settings.edit');
+            Route::put('/settings', [SettingController::class, 'update'])->name('settings.update');
+        });
 
         // Menus
-        Route::prefix('menus')->name('menus.')->group(function () {
+        Route::prefix('menus')->name('menus.')->middleware('admin.role:admin')->group(function () {
             Route::get('/', [MenuController::class, 'index'])->name('index');
             Route::get('/create', [MenuController::class, 'create'])->name('create');
             Route::post('/', [MenuController::class, 'store'])->name('store');
@@ -124,7 +128,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         });
 
         // Slider & Banner
-        Route::prefix('media-banners')->name('media-banners.')->group(function () {
+        Route::prefix('media-banners')->name('media-banners.')->middleware('admin.role:admin')->group(function () {
             Route::get('/', [MediaBannerController::class, 'index'])->name('index');
             Route::get('/create', [MediaBannerController::class, 'create'])->name('create');
             Route::post('/', [MediaBannerController::class, 'store'])->name('store');
@@ -134,7 +138,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         });
 
         // Home Configs
-        Route::prefix('home-configs')->name('home-configs.')->group(function () {
+        Route::prefix('home-configs')->name('home-configs.')->middleware('admin.role:admin')->group(function () {
             Route::get('/', [HomeConfigController::class, 'index'])->name('index');
             Route::get('/create', [HomeConfigController::class, 'create'])->name('create');
             Route::post('/', [HomeConfigController::class, 'store'])->name('store');

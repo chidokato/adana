@@ -1,67 +1,77 @@
-﻿@extends('admin.layout.main')
+@extends('admin.layout.main')
+
+@section('title', 'Them tai khoan')
+@section('page_title', 'Them tai khoan')
+@section('breadcrumb', 'Them tai khoan')
 
 @section('content')
-<div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Thêm người dùng</h1>
-    <a href="{{ route('admin.users.index') }}" class="btn btn-secondary btn-sm">
-        <i class="fas fa-arrow-left mr-1"></i> Quay lại
-    </a>
-</div>
+    @include('admin.partials.list-hero', [
+        'heroTitle' => 'Them tai khoan',
+        'heroSubtitle' => 'Tao tai khoan quan tri moi va gan quyen truy cap.',
+        'heroPrimaryForm' => 'user-form',
+        'heroPrimaryType' => 'submit',
+        'heroPrimaryLabel' => 'Luu tai khoan',
+        'heroSecondaryRoute' => route('admin.users.index'),
+        'heroSecondaryLabel' => 'Quay lai',
+    ])
 
-<div class="card shadow mb-4">
-    <div class="card-body">
-        <form method="POST" action="{{ route('admin.users.store') }}">
-            @csrf
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label for="name">Tên</label>
-                    <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" required>
-                    @error('name')
-                        <small class="text-danger">{{ $message }}</small>
-                    @enderror
-                </div>
-
-                <div class="form-group col-md-6">
-                    <label for="email">Email</label>
-                    <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}" required>
-                    @error('email')
-                        <small class="text-danger">{{ $message }}</small>
-                    @enderror
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label for="password">Mật khẩu</label>
-                    <input type="password" class="form-control" id="password" name="password" required>
-                    @error('password')
-                        <small class="text-danger">{{ $message }}</small>
-                    @enderror
-                </div>
-
-                <div class="form-group col-md-6">
-                    <label for="password_confirmation">Nhập lại mật khẩu</label>
-                    <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" required>
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label>Trạng thái</label>
-                    <div class="custom-control custom-switch">
-                        <input type="checkbox" class="custom-control-input" id="status" name="status" value="1" {{ old('status', '1') == '1' ? 'checked' : '' }}>
-                        <label class="custom-control-label" for="status">Bật</label>
+    <form id="user-form" method="POST" action="{{ route('admin.users.store') }}">
+        @csrf
+        <div class="row">
+            <div class="col-xl-9">
+                <div class="card border">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="name" class="form-label">Ten</label>
+                                <input type="text" id="name" name="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}" required>
+                                @error('name')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" id="email" name="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}" required>
+                                @error('email')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="password" class="form-label">Mat khau</label>
+                                <input type="password" id="password" name="password" class="form-control @error('password') is-invalid @enderror" required>
+                                @error('password')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-6 mb-0">
+                                <label for="password_confirmation" class="form-label">Nhap lai mat khau</label>
+                                <input type="password" id="password_confirmation" name="password_confirmation" class="form-control" required>
+                            </div>
+                        </div>
                     </div>
-                    @error('status')
-                        <small class="text-danger">{{ $message }}</small>
-                    @enderror
                 </div>
             </div>
-
-            <div class="text-right">
-                <button type="submit" class="btn btn-primary">Lưu</button>
+            <div class="col-xl-3">
+                <div class="card border">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="role" class="form-label">Quyen</label>
+                            <select id="role" name="role" class="form-select @error('role') is-invalid @enderror" required>
+                                @foreach($roles as $value => $label)
+                                    <option value="{{ $value }}" {{ old('role', \App\Models\AdminUser::ROLE_EDITOR) === $value ? 'selected' : '' }}>{{ $label }}</option>
+                                @endforeach
+                            </select>
+                            @error('role')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="custom-control custom-switch">
+                            <input class="custom-control-input" type="checkbox" id="status" name="status" value="1" {{ old('status', 1) ? 'checked' : '' }}>
+                            <label class="custom-control-label" for="status">Kich hoat tai khoan</label>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </form>
-    </div>
-</div>
+        </div>
+    </form>
 @endsection

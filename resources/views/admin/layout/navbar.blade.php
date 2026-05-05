@@ -1,5 +1,6 @@
-﻿<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion toggled" id="accordionSidebar">
-    <!-- Sidebar - Brand -->
+@php($adminUser = Auth::guard('admin')->user())
+
+<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion toggled" id="accordionSidebar">
     <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('admin.dashboard') }}">
         <div class="sidebar-brand-icon rotate-n-15">
             <i class="fas fa-laugh-wink"></i>
@@ -35,29 +36,31 @@
         </a>
     </li>
 
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#setting"
-           aria-expanded="true" aria-controls="setting">
-            <i class="fas fa-fw fa-cog"></i>
-            <span>Cài đặt</span>
-        </a>
-        <div id="setting" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="{{ route('admin.menus.index') }}">Menu</a>
-                <a class="collapse-item" href="{{ route('admin.settings.edit') }}">Cấu hình website</a>
-                <a class="collapse-item" href="{{ route('admin.home-configs.index') }}">Cấu hình trang chủ</a>
-                <a class="collapse-item" href="{{ route('admin.seo.index') }}">SEO</a>
-                <a class="collapse-item" href="{{ route('admin.media-banners.index') }}">Slider & Banner</a>
+    @if($adminUser && $adminUser->isAdmin())
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#setting"
+               aria-expanded="true" aria-controls="setting">
+                <i class="fas fa-fw fa-cog"></i>
+                <span>Cài đặt</span>
+            </a>
+            <div id="setting" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <a class="collapse-item" href="{{ route('admin.menus.index') }}">Menu</a>
+                    <a class="collapse-item" href="{{ route('admin.settings.edit') }}">Cấu hình website</a>
+                    <a class="collapse-item" href="{{ route('admin.home-configs.index') }}">Cấu hình trang chủ</a>
+                    <a class="collapse-item" href="{{ route('admin.seo.index') }}">SEO</a>
+                    <a class="collapse-item" href="{{ route('admin.media-banners.index') }}">Slider & Banner</a>
+                </div>
             </div>
-        </div>
-    </li>
+        </li>
 
-    <li class="nav-item">
-        <a class="nav-link" href="{{ route('admin.users.index') }}">
-            <i class="fas fa-fw fa-user"></i>
-            <span>Người dùng (admin)</span>
-        </a>
-    </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('admin.users.index') }}">
+                <i class="fas fa-fw fa-user-shield"></i>
+                <span>Phân quyền</span>
+            </a>
+        </li>
+    @endif
 
     <hr class="sidebar-divider d-none d-md-block">
 

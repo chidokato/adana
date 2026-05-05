@@ -1,137 +1,129 @@
-﻿@extends('admin.layout.main')
+@extends('admin.layout.main')
 
-@section('css')
-<style>
-    .custom-switch .custom-control-label::before { left: -2.25rem; }
-    .custom-switch .custom-control-label::after { left: calc(-2.25rem + 2px); }
-    .btn-equal-height { height: calc(1.5em + .75rem + 2px); }
-</style>
-@endsection
+@section('title', 'Danh muc')
+@section('page_title', 'Danh muc')
+@section('breadcrumb', 'Danh muc')
 
 @section('content')
-<div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Danh mục</h1>
-    <a href="{{ route('admin.categories.create') }}" class="btn btn-primary">
-        <i class="fas fa-plus mr-1"></i> Thêm danh mục
-    </a>
-</div>
+    @include('admin.partials.list-hero', [
+        'heroTitle' => 'Quan ly danh muc',
+        'heroSubtitle' => 'Cay danh muc cho san pham va tin tuc tren website.',
+        'heroPrimaryRoute' => route('admin.categories.create'),
+        'heroPrimaryLabel' => 'Them danh muc',
+    ])
 
-@include('admin.alert')
-
-<div class="">
-    <form method="GET" action="{{ route('admin.categories.index') }}">
-        <div class="form-row align-items-end">
-            <div class="form-group col-md-3">
-                <input type="text" class="form-control" id="q" name="q" value="{{ request('q') }}" placeholder="Nhập tên hoặc ID">
-            </div>
-            <div class="form-group col-md-2">
-                <select class="form-control" id="type" name="type">
-                    <option value="">-- Tất cả loại --</option>
-                    <option value="product" {{ request('type') === 'product' ? 'selected' : '' }}>Danh mục sản phẩm</option>
-                    <option value="news" {{ request('type') === 'news' ? 'selected' : '' }}>Danh mục tin tức</option>
-                </select>
-            </div>
-            <div class="form-group col-sm-auto">
-                <button type="button" class="btn btn-outline-secondary btn-equal-height" onclick="window.location='{{ route('admin.categories.index') }}'">Đặt lại</button>
-            </div>
-            <div class="form-group col-sm-auto">
-                <button type="submit" class="btn btn-primary btn-equal-height">Tìm kiếm</button>
-            </div>
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title mb-0">Card Tables</h4>
         </div>
-    </form>
-</div>
 
-<div class="card shadow mb-4">
-    <div class="card-header py-3 d-flex align-items-center justify-content-between">
-        <h6 class="m-0 font-weight-bold text-primary">Danh sách danh mục</h6>
-    </div>
-    <div class="table-responsive">
-        <table class="table table-bordered" id="categoryTable" width="100%" cellspacing="0">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Tên danh mục</th>
-                    <th>Loại</th>
-                    <th>Slug</th>
-                    <th class="text-center" style="width: 120px;">Trạng thái</th>
-                    <th class="text-center" style="width: 140px;">Hành động</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if(!empty($isFiltered) && $isFiltered)
-                    @foreach($categories as $category)
+        <div class="card-body border border-dashed border-end-0 border-start-0">
+            <form method="GET" action="{{ route('admin.categories.index') }}" class="mb-3">
+                <div class="row g-2 align-items-center">
+                    <div class="col-lg-5">
+                        <input
+                            type="text"
+                            class="form-control"
+                            name="q"
+                            value="{{ request('q') }}"
+                            placeholder="Tim theo ten danh muc hoac ID"
+                        >
+                    </div>
+                    <div class="col-lg-3">
+                        <select class="form-select" name="type">
+                            <option value="">Tat ca loai</option>
+                            <option value="product" {{ request('type') === 'product' ? 'selected' : '' }}>San pham</option>
+                            <option value="news" {{ request('type') === 'news' ? 'selected' : '' }}>Tin tuc</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-auto">
+                        <button type="submit" class="btn btn-primary">Tim kiem</button>
+                    </div>
+                    <div class="col-lg-auto">
+                        <a href="{{ route('admin.categories.index') }}" class="btn btn-light">Dat lai</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="live-preview px-3 pb-3">
+            <div class="table-responsive table-card">
+                <table class="table align-middle table-nowrap table-striped-columns mb-0">
+                    <thead class="table-light">
                         <tr>
-                            <td>{{ $category->id }}</td>
-                            <td>{{ $category->name }}</td>
-                            <td>{{ $category->type === 'news' ? 'Tin tức' : 'Sản phẩm' }}</td>
-                            <td>{{ $category->slug }}</td>
-                            <td class="text-center">
-                                <div class="custom-control custom-switch d-inline-block">
-                                    <input type="checkbox"
-                                           class="custom-control-input js-toggle-category-status"
-                                           id="categoryStatus{{ $category->id }}"
-                                           data-url="{{ route('admin.categories.toggleStatus', $category) }}"
-                                           {{ $category->status ? 'checked' : '' }}>
-                                    <label class="custom-control-label" for="categoryStatus{{ $category->id }}"></label>
+                            <th scope="col" style="width: 46px;">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="categoryTableCheck" disabled>
+                                    <label class="form-check-label" for="categoryTableCheck"></label>
                                 </div>
-                            </td>
-                            <td class="text-center">
-                                <a href="{{ route('admin.categories.edit', $category) }}" class="btn btn-sm btn-warning">Sửa</a>
-                                <form action="{{ route('admin.categories.destroy', $category) }}" method="POST" class="d-inline" onsubmit="return confirm('Xóa danh mục này?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger">Xóa</button>
-                                </form>
-                            </td>
+                            </th>
+                            <th scope="col">ID</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Type</th>
+                            <th scope="col">Status</th>
+                            <th scope="col" style="width: 150px;">Action</th>
                         </tr>
-                    @endforeach
-                @else
-                    @foreach($categories as $category)
-                        @include('admin.category.row', ['category' => $category, 'level' => 0])
-                    @endforeach
-                @endif
-            </tbody>
-        </table>
-    </div>
-    @if(!empty($isFiltered) && $isFiltered)
-        <div class="d-flex justify-content-end">
-            {{ $categories->links() }}
+                    </thead>
+                    <tbody>
+                        @if ($isFiltered)
+                            @forelse ($categories as $category)
+                                <tr>
+                                    <td>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="" id="categoryTableCheck{{ $category->id }}">
+                                            <label class="form-check-label" for="categoryTableCheck{{ $category->id }}"></label>
+                                        </div>
+                                    </td>
+                                    <td><a href="{{ route('admin.categories.edit', $category) }}" class="fw-medium">#CT{{ str_pad((string) $category->id, 4, '0', STR_PAD_LEFT) }}</a></td>
+                                    <td>
+                                        <div class="fw-semibold">{{ $category->name }}</div>
+                                        <div class="text-muted small">{{ $category->slug }}</div>
+                                    </td>
+                                    <td>{{ optional($category->updated_at ?? $category->created_at)->format('d M, Y') ?? '-' }}</td>
+                                    <td>{{ $category->type === 'news' ? 'Tin tuc' : 'San pham' }}</td>
+                                    <td>
+                                        <span class="badge {{ $category->status ? 'bg-success' : 'bg-danger' }}">
+                                            {{ $category->status ? 'Paid' : 'Refund' }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center justify-content-center gap-3">
+                                            <a href="{{ route('admin.categories.edit', $category) }}" class="text-primary" title="View">
+                                                <i class="ri-eye-fill fs-16"></i>
+                                            </a>
+                                            <a href="{{ route('admin.categories.edit', $category) }}" class="text-primary" title="Sua">
+                                                <i class="ri-pencil-fill fs-16"></i>
+                                            </a>
+                                            <form action="{{ route('admin.categories.destroy', $category) }}" method="POST" class="d-inline" onsubmit="return confirm('Ban co chac muon xoa category nay?')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-link p-0 text-danger" title="Xoa">
+                                                    <i class="ri-delete-bin-5-fill fs-16"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="7" class="text-center text-muted py-4">No data found.</td>
+                                </tr>
+                            @endforelse
+                        @else
+                            @foreach ($categories as $category)
+                                @include('admin.category.product-like-row', ['category' => $category, 'level' => 0])
+                            @endforeach
+                        @endif
+                    </tbody>
+                </table>
+            </div>
         </div>
-    @endif
-</div>
-@endsection
 
-@section('js')
-<script>
-    $(document).ready(function () {
-        $('#categoryTable tbody tr').filter(function () {
-            return $(this).find('td').filter(function () {
-                return $(this).text().trim() !== '';
-            }).length === 0;
-        }).remove();
-
-        $(document).on('change', '.js-toggle-category-status', function () {
-            var $toggle = $(this);
-            var url = $toggle.data('url');
-            var prev = !$toggle.prop('checked');
-
-            $.ajax({
-                url: url,
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name=\"csrf-token\"]').attr('content')
-                }
-            }).done(function () {
-                if (typeof showToast === 'function') {
-                    showToast('success', 'Đã cập nhật trạng thái.');
-                }
-            }).fail(function () {
-                $toggle.prop('checked', prev);
-                if (typeof showToast === 'function') {
-                    showToast('error', 'Không thể cập nhật trạng thái.');
-                }
-            });
-        });
-    });
-</script>
+        <div class="card-body">
+            @if ($isFiltered)
+                {{ $categories->links('pagination::bootstrap-4') }}
+            @endif
+        </div>
+    </div>
 @endsection

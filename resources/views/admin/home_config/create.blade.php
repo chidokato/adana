@@ -1,18 +1,24 @@
 @extends('admin.layout.main')
 
-@section('content')
-<form method="POST" action="{{ route('admin.home-configs.store') }}" enctype="multipart/form-data">
-    @csrf
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Thêm cấu hình trang chủ</h1>
-        <div>
-            <a href="{{ route('admin.home-configs.index') }}" class="btn btn-secondary">Quay lại</a>
-            <button type="submit" class="btn btn-primary">Lưu</button>
-        </div>
-    </div>
+@section('title', 'Them cau hinh trang chu')
+@section('page_title', 'Them cau hinh trang chu')
+@section('breadcrumb', 'Them cau hinh trang chu')
 
-    @include('admin.home_config.form')
-</form>
+@section('content')
+    @include('admin.partials.list-hero', [
+        'heroTitle' => 'Them cau hinh trang chu',
+        'heroSubtitle' => 'Tao section moi de hien thi noi dung tren trang chu.',
+        'heroPrimaryForm' => 'home-config-form',
+        'heroPrimaryType' => 'submit',
+        'heroPrimaryLabel' => 'Luu cau hinh',
+        'heroSecondaryRoute' => route('admin.home-configs.index'),
+        'heroSecondaryLabel' => 'Quay lai',
+    ])
+
+    <form id="home-config-form" method="POST" action="{{ route('admin.home-configs.store') }}" enctype="multipart/form-data">
+        @csrf
+        @include('admin.home_config.form')
+    </form>
 @endsection
 
 @section('js')
