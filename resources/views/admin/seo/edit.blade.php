@@ -1,46 +1,23 @@
 @extends('admin.layout.main')
 
+@section('title', 'Cap nhat SEO')
+@section('page_title', 'Cap nhat SEO')
+@section('breadcrumb', 'Cap nhat SEO')
+
 @section('content')
-<div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Sửa SEO</h1>
-    <a href="{{ route('admin.seo.index') }}" class="btn btn-secondary">
-        <i class="fas fa-arrow-left mr-1"></i> Quay lại
-    </a>
-</div>
+    @include('admin.partials.list-hero', [
+        'heroTitle' => 'Cap nhat cau hinh SEO',
+        'heroSubtitle' => 'Chinh sua title va description cho duong dan dang co.',
+        'heroPrimaryForm' => 'seo-form',
+        'heroPrimaryType' => 'submit',
+        'heroPrimaryLabel' => 'Cap nhat SEO',
+        'heroSecondaryRoute' => route('admin.seo.index'),
+        'heroSecondaryLabel' => 'Quay lai',
+    ])
 
-<div class="card shadow mb-4">
-    <div class="card-body">
-        <form method="POST" action="{{ route('admin.seo.update', $seo) }}">
-            @csrf
-            @method('PUT')
-            <div class="form-group">
-                <label for="url">URL (ví dụ: /, /gioi-thieu, /lien-he)</label>
-                <input type="text" class="form-control" id="url" name="url" value="{{ old('url', $seo->url) }}" required>
-                @error('url')
-                    <small class="text-danger">{{ $message }}</small>
-                @enderror
-            </div>
-
-            <div class="form-group">
-                <label for="title">Title</label>
-                <input type="text" class="form-control" id="title" name="title" value="{{ old('title', $seo->title) }}">
-                @error('title')
-                    <small class="text-danger">{{ $message }}</small>
-                @enderror
-            </div>
-
-            <div class="form-group">
-                <label for="description">Description</label>
-                <textarea class="form-control" id="description" name="description" rows="4">{{ old('description', $seo->description) }}</textarea>
-                @error('description')
-                    <small class="text-danger">{{ $message }}</small>
-                @enderror
-            </div>
-
-            <div class="text-right">
-                <button type="submit" class="btn btn-primary btn-admin-primary">Cập nhật</button>
-            </div>
-        </form>
-    </div>
-</div>
+    <form id="seo-form" method="POST" action="{{ route('admin.seo.update', $seo) }}">
+        @csrf
+        @method('PUT')
+        @include('admin.seo.form', ['seo' => $seo])
+    </form>
 @endsection

@@ -1,5 +1,7 @@
 @extends('admin.layout.main')
 
+@php($currentAdminId = auth('admin')->id())
+
 @section('title', 'Tai khoan')
 @section('page_title', 'Tai khoan')
 @section('breadcrumb', 'Tai khoan')
@@ -85,9 +87,23 @@
                                 <td>{{ optional($user->updated_at ?? $user->created_at)->format('d M, Y') ?? '-' }}</td>
                                 <td>{{ $user->role_label }}</td>
                                 <td>
-                                    <span class="badge {{ $user->status ? 'bg-success' : 'bg-danger' }}">
-                                        {{ $user->status ? 'Paid' : 'Refund' }}
-                                    </span>
+                                    <form action="{{ route('admin.users.toggleStatus', $user) }}" method="POST" class="d-inline-block user-status-toggle-form">
+                                        @csrf
+                                        <div class="form-check form-switch mb-0">
+                                            <input
+                                                class="form-check-input user-status-toggle"
+                                                type="checkbox"
+                                                role="switch"
+                                                id="userStatus{{ $user->id }}"
+                                                {{ $user->status ? 'checked' : '' }}
+                                                {{ (int) $currentAdminId === (int) $user->id ? 'disabled' : '' }}
+                                                data-user-name="{{ $user->name }}"
+                                            >
+                                            <label class="form-check-label small text-muted" for="userStatus{{ $user->id }}">
+                                                {{ (int) $currentAdminId === (int) $user->id ? 'Tai khoan hien tai' : ($user->status ? 'Bat' : 'Tat') }}
+                                            </label>
+                                        </div>
+                                    </form>
                                 </td>
                                 <td>
                                     <div class="d-flex align-items-center justify-content-center gap-3">
@@ -97,13 +113,19 @@
                                         <a href="{{ route('admin.users.edit', $user) }}" class="text-primary" title="Sua">
                                             <i class="ri-pencil-fill fs-16"></i>
                                         </a>
-                                        <form action="{{ route('admin.users.destroy', $user) }}" method="POST" class="d-inline" onsubmit="return confirm('Ban co chac muon xoa nguoi dung nay?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-link p-0 text-danger" title="Xoa">
+                                        @if ((int) $currentAdminId === (int) $user->id)
+                                            <span class="text-muted" title="Khong the xoa tai khoan hien tai">
                                                 <i class="ri-delete-bin-5-fill fs-16"></i>
-                                            </button>
-                                        </form>
+                                            </span>
+                                        @else
+                                            <form action="{{ route('admin.users.destroy', $user) }}" method="POST" class="d-inline" onsubmit="return confirm('Ban co chac muon xoa nguoi dung nay?')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-link p-0 text-danger" title="Xoa">
+                                                    <i class="ri-delete-bin-5-fill fs-16"></i>
+                                                </button>
+                                            </form>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>
@@ -121,4 +143,26 @@
             {{ $users->links('pagination::bootstrap-4') }}
         </div>
     </div>
+@endsection
+
+@section('js')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.user-status-toggle').forEach(function (toggle) {
+            toggle.addEventListener('change', function () {
+                const form = toggle.closest('.user-status-toggle-form');
+                if (!form) {
+                    return;
+                }
+
+                const label = form.querySelector('.form-check-label');
+                if (label) {
+                    label.textContent = toggle.checked ? 'Bat' : 'Tat';
+                }
+
+                form.submit();
+            });
+        });
+    });
+</script>
 @endsection

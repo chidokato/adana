@@ -61,7 +61,7 @@ class AdminUserController extends Controller
             'status' => $request->has('status') ? 1 : 0,
         ]);
 
-        return redirect()->route('admin.users.index')->with('success', 'Đã tạo người dùng.');
+        return redirect()->route('admin.users.index')->with('success', 'Da tao nguoi dung.');
     }
 
     public function edit(AdminUser $user)
@@ -94,14 +94,18 @@ class AdminUserController extends Controller
 
         $user->update($data);
 
-        return redirect()->route('admin.users.index')->with('success', 'Đã cập nhật người dùng.');
+        return redirect()->route('admin.users.index')->with('success', 'Da cap nhat nguoi dung.');
     }
 
     public function destroy(AdminUser $user)
     {
+        if (Auth::guard('admin')->id() === $user->id) {
+            return back()->with('error', 'Khong the tu xoa tai khoan dang dang nhap.');
+        }
+
         $user->delete();
 
-        return redirect()->route('admin.users.index')->with('success', 'Đã xóa người dùng.');
+        return redirect()->route('admin.users.index')->with('success', 'Da xoa nguoi dung.');
     }
 
     public function toggleStatus(Request $request, AdminUser $user)
@@ -119,20 +123,20 @@ class AdminUserController extends Controller
 
             if ($request->expectsJson()) {
                 return response()->json([
-                    'message' => 'Tài khoản của bạn đã bị tắt và đã được đăng xuất.',
+                    'message' => 'Tai khoan cua ban da bi tat va da duoc dang xuat.',
                     'redirect' => route('admin.login'),
                 ]);
             }
 
-            return redirect()->route('admin.login')->with('center_warning', 'Tài khoản của bạn đã bị tắt và đã được đăng xuất.');
+            return redirect()->route('admin.login')->with('center_warning', 'Tai khoan cua ban da bi tat va da duoc dang xuat.');
         }
 
         if ($request->expectsJson()) {
             return response()->json([
-                'message' => 'Đã cập nhật trạng thái.',
+                'message' => 'Da cap nhat trang thai.',
             ]);
         }
 
-        return back()->with('success', 'Đã cập nhật trạng thái.');
+        return back()->with('success', 'Da cap nhat trang thai.');
     }
 }
