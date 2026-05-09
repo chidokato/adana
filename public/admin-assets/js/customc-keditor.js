@@ -275,6 +275,14 @@ function initEditor() {
 
         CKEDITOR.ClassicEditor.create(editorElement, config)
             .then(function (editor) {
+                var editableElement = editor.ui.view.editable.element;
+
+                if (editableElement) {
+                    editableElement.style.height = '520px';
+                    editableElement.style.maxHeight = '520px';
+                    editableElement.style.overflowY = 'auto';
+                }
+
                 editorElement.ckeditorInstance = editor;
             })
             .catch(function (error) {

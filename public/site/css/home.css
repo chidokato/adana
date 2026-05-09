@@ -17,6 +17,29 @@
 
 .text-justify{ text-align:justify; }
 
+.home-hero-title-section {
+    padding: 5px 0;
+    background: #fff;
+    position: relative;
+    z-index: 2;
+}
+
+.home-hero-title-section .container {
+    display: flex;
+    justify-content: center;
+}
+
+.home-hero-title {
+    font-weight: bold;
+    font-size: 2rem;
+}
+
+.home-hero-title span {
+    color: #d83133;
+    font-weight: bold;
+    font-size: 2rem;
+}
+
 h2, .h2 {
     font-size: 30px;
 }
@@ -122,6 +145,12 @@ h2, .h2 {
 }
 
 @media (max-width: 768px) {
+    .home-hero-title {
+        max-width: 100%;
+        padding: 8px 18px 10px;
+        line-height: 1.15;
+    }
+
     .page-title {
         height: 70vh !important;
         min-height: 70vh !important;
@@ -154,6 +183,18 @@ h2, .h2 {
 }
 
 @media (max-width: 575px) {
+    .home-hero-title-section {
+        padding: 12px 0 10px;
+    }
+
+    .home-hero-title {
+        width: 100%;
+        font-size: 24px;
+        letter-spacing: -0.03em;
+        border-radius: 16px;
+        padding: 8px 14px 10px;
+    }
+
     .home-about-box {
         padding-right: 0;
         padding-bottom: 0;

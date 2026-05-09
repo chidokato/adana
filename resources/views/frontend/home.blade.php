@@ -6,14 +6,16 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aurexo | Car Dealer, Rental & Listing HTML Template</title>
+    <title>{{ $seoTitle ?? ($pageTitle ?? config('app.name')) }}</title>
 	<link rel="stylesheet" href="{{ asset('site/assets/scss/swiper/swiper-bundle.min.css') }}">
     <link rel="stylesheet" href="{{ asset('site/assets/app.css') }}">
     <link rel="stylesheet" href="{{ asset('site/css/header.css') }}">
     <link rel="stylesheet" href="{{ asset('site/css/home.css') }}">
     <link rel="stylesheet" href="{{ asset('site/css/pages.css') }}">
-	<meta property="og:image" content="{{ asset('site/assets/images/logo.png') }}">
+	<meta name="description" content="{{ $seoDescription ?? ($pageDescription ?? '') }}">
+	<meta property="og:image" content="{{ !empty($siteSetting->logo) ? asset($siteSetting->logo) : asset('site/assets/images/logo.png') }}">
 	<meta property="og:type" content="website">
+    <link rel="canonical" href="{{ url()->current() }}">
     <!-- Favicon and Touch Icons  -->
     <link rel="shortcut icon" href="{{ !empty($siteSetting->favicon) ? asset($siteSetting->favicon) : asset('site/assets/images/favicon.png') }}">
     <link rel="apple-touch-icon-precomposed" href="{{ !empty($siteSetting->favicon) ? asset($siteSetting->favicon) : asset('site/assets/images/favicon.png') }}">
@@ -21,7 +23,7 @@
 <body>
 	<!-- preloade -->
 	<div class="preload preload-container">
-		<img class="preload--icon" src="{{ asset('site/assets/icons/preload.svg') }}" alt="preload">
+		<img class="preload--icon" src="{{ !empty($siteSetting->logo) ? asset($siteSetting->logo) : asset('site/assets/images/logo.png') }}" alt="{{ $siteSetting->company_name ?? config('app.name') }}">
 	  </div>
 	  <!-- preload -->
 
@@ -31,6 +33,14 @@
 		<!-- Header -->
 @include('frontend.partials.header')
 <!-- Header -->
+
+        <section class="home-hero-title-section">
+            <div class="container">
+                <h1 class="home-hero-title">
+                    Hóa chất tốt nhất với <span>hiệu suất vượt trội</span>
+                </h1>
+            </div>
+        </section>
 
 		<!-- page-title -->
 		<section class="page-title flex h-800 page-title-style-1">

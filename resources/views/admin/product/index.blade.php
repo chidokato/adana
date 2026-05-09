@@ -100,7 +100,7 @@
                                 </td>
                                 <td>{{ optional($item->updated_at ?? $item->created_at)->format('d M, Y') ?? '-' }}</td>
                                 <td>{{ optional($item->category)->name ?: '-' }}</td>
-                                <td>{{ $item->price !== null ? '$' . number_format((float) $item->price, 2) : '-' }}</td>
+                                <td>{{ $item->price !== null ? number_format((float) $item->price, 0, ',', '.') . ' VND' : '-' }}</td>
                                 <td>
                                     <span class="badge {{ $item->status ? 'bg-success' : 'bg-danger' }}">
                                         {{ $item->status ? 'Paid' : 'Refund' }}

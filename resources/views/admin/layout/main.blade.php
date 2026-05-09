@@ -118,6 +118,12 @@
             cursor: pointer;
         }
 
+        .ck.ck-editor__editable_inline {
+            height: 520px;
+            max-height: 520px;
+            overflow-y: auto;
+        }
+
         .custom-control-label::before {
             position: absolute;
             top: .15rem;

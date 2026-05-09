@@ -853,8 +853,10 @@ button {
   justify-content: center;
 }
 .preload-container .preload--icon {
-  width: 100vw;
-  height: 100vh;
+  width: min(280px, 70vw);
+  max-height: 140px;
+  height: auto;
+  object-fit: contain;
 }
 
 @keyframes lod {
