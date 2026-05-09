@@ -68,7 +68,11 @@
 			$homeAboutTitle = optional($aboutConfig)->title ?: optional($introConfig)->title ?: $companyName;
 			$homeAboutLead = optional($aboutConfig)->content ?: optional($introConfig)->content ?: optional($introConfig)->description ?: ('<p>' . e($siteSetting->short_intro ?? 'ADANA Group cung cấp giải pháp trọn gói trong lĩnh vực HVAC, vật tư tiêu hao, hóa chất công nghiệp và gia công cơ khí theo yêu cầu.') . '</p>');
 			$homeAboutMainImage = !empty(optional($aboutConfig)->image) ? asset(optional($aboutConfig)->image) : (!empty(optional($introConfig)->image) ? asset(optional($introConfig)->image) : asset('site/assets/images/pages/about-1.jpg'));
-			$homeAboutSubImage = asset('site/assets/images/pages/about-2.jpg');
+			$homeAboutSubImage = !empty(optional($aboutConfig)->sub_image)
+                ? asset(optional($aboutConfig)->sub_image)
+                : (!empty(optional($introConfig)->sub_image)
+                    ? asset(optional($introConfig)->sub_image)
+                    : asset('site/assets/images/pages/about-2.jpg'));
 			$homePhone = $siteSetting->hotline ?? '0936 361 248';
 		@endphp
 
@@ -105,15 +109,15 @@
 							</ul>
 
 							<div class="flex gap-28 items-center flex-wrap">
-	                            <a href="http://localhost/www/adana/public/lien-he" class="btn btn-primary btn-large font-weight-600">
+	                            <a href="{{ route('frontend.contact') }}" class="btn btn-primary btn-large font-weight-600">
 	                                Liên hệ ngay
 	                            </a>
 
 	                            <a href="tel:0936361248" class="flex gap-16">
-	                                <img src="http://localhost/www/adana/public/site/assets/icons/PhoneCall-3.svg" alt="PhoneCall">
+	                                <img src="{{ asset('site/assets/icons/PhoneCall-3.svg') }}" alt="PhoneCall">
 	                                <div class="mt2">
 	                                    <span class="text-sm text-secondary">Tư vấn nhanh</span>
-	                                    <p class="h4">0936361248</p>
+	                                    <p class="h4">{{ $homePhone }}</p>
 	                                </div>
 	                            </a>
 	                        </div>

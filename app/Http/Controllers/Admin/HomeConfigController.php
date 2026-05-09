@@ -35,7 +35,8 @@ class HomeConfigController extends Controller
     public function store(Request $request)
     {
         $data = $this->validatedData($request);
-        $data['image'] = $this->uploadImage($request);
+        $data['image'] = $this->uploadImage($request, 'image');
+        $data['sub_image'] = $this->uploadImage($request, 'sub_image');
 
         HomeConfig::create($data);
 
@@ -50,7 +51,8 @@ class HomeConfigController extends Controller
     public function update(Request $request, HomeConfig $home_config)
     {
         $data = $this->validatedData($request, $home_config->id);
-        $data['image'] = $this->uploadImage($request, $home_config->image);
+        $data['image'] = $this->uploadImage($request, 'image', $home_config->image);
+        $data['sub_image'] = $this->uploadImage($request, 'sub_image', $home_config->sub_image);
 
         $home_config->update($data);
 
@@ -66,24 +68,43 @@ class HomeConfigController extends Controller
 
     protected function validatedData(Request $request, $id = null)
     {
-        return $request->validate([
-            'section_key' => ['required', 'string', 'max:100', 'unique:home_configs,section_key,' . $id],
-            'title' => ['nullable', 'string', 'max:255'],
-            'description' => ['nullable', 'string'],
-            'content' => ['nullable', 'string'],
-            'note' => ['nullable', 'string'],
-            'image' => ['nullable', 'image', 'max:4096'],
-        ]);
+        return $request->validate(
+            [
+                'section_key' => ['required', 'string', 'max:100', 'unique:home_configs,section_key,' . $id],
+                'title' => ['nullable', 'string', 'max:255'],
+                'description' => ['nullable', 'string'],
+                'content' => ['nullable', 'string'],
+                'note' => ['nullable', 'string'],
+                'image' => ['nullable', 'image', 'max:4096'],
+                'sub_image' => ['nullable', 'image', 'max:4096'],
+            ],
+            [
+                'section_key.required' => 'Vui lòng nhập khóa section.',
+                'section_key.unique' => 'Khóa section này đã tồn tại.',
+                'section_key.max' => 'Khóa section không được vượt quá :max ký tự.',
+                'title.max' => 'Tiêu đề không được vượt quá :max ký tự.',
+                'image.image' => 'Ảnh chính phải là tệp hình ảnh hợp lệ.',
+                'image.max' => 'Ảnh chính không được lớn hơn :max KB.',
+                'sub_image.image' => 'Ảnh phụ phải là tệp hình ảnh hợp lệ.',
+                'sub_image.max' => 'Ảnh phụ không được lớn hơn :max KB.',
+            ],
+            [
+                'section_key' => 'khóa section',
+                'title' => 'tiêu đề',
+                'image' => 'ảnh chính',
+                'sub_image' => 'ảnh phụ',
+            ]
+        );
     }
 
-    protected function uploadImage(Request $request, $current = null)
+    protected function uploadImage(Request $request, $field, $current = null)
     {
-        if (! $request->hasFile('image')) {
+        if (! $request->hasFile($field)) {
             return $current;
         }
 
-        $file = $request->file('image');
-        $name = time() . '_home_config.' . $file->getClientOriginalExtension();
+        $file = $request->file($field);
+        $name = time() . '_' . $field . '_home_config.' . $file->getClientOriginalExtension();
         $dest = public_path('uploads/home-configs');
 
         if (! File::exists($dest)) {

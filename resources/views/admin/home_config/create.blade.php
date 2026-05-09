@@ -20,17 +20,3 @@
         @include('admin.home_config.form')
     </form>
 @endsection
-
-@section('js')
-<script>
-function readHomeImage(input) {
-    if (input.files && input.files[0]) {
-        var reader = new FileReader();
-        reader.onload = function (e) {
-            $('.file-upload-image-home').attr('src', e.target.result);
-        };
-        reader.readAsDataURL(input.files[0]);
-    }
-}
-</script>
-@endsection

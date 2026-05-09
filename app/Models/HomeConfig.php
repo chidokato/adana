@@ -15,6 +15,7 @@ class HomeConfig extends Model
         'description',
         'content',
         'image',
+        'sub_image',
         'note',
     ];
 }
