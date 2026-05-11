@@ -126,10 +126,6 @@
                                             <img src="{{ asset('site/assets/icons/gaspump.svg') }}" alt="fuel">
                                             <span>{{ optional($product->category)->name ?: 'EV' }}</span>
                                         </li>
-                                        <li>
-                                            <img src="{{ asset('site/assets/icons/manual.svg') }}" alt="fuel">
-                                            <span>Manual</span>
-                                        </li>
                                     </ul>
 
                                     <p class="card-box__price mb-15">
