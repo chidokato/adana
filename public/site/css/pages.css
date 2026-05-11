@@ -245,6 +245,25 @@
     min-height: calc(1.44em * 2);
 }
 
+.listing-sidebar-right .card-box .content .tag {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 12px;
+    overflow: hidden;
+}
+
+.listing-sidebar-right .card-box .content .tag li {
+    min-width: 0;
+    flex: 1 1 0;
+}
+
+.listing-sidebar-right .card-box .content .tag li span {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 @media (max-width: 1199px) {
     .about-page .value-grid {
         grid-template-columns: 1fr;

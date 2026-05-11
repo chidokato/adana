@@ -98,16 +98,6 @@
                                             </a>
                                         </p>
 
-                                        <div class="flex items-center gap-8">
-                                            <p class="category uppercase text-white">
-                                                <img src="{{ asset('site/assets/icons/picture.svg') }}" alt="picture">
-                                                8
-                                            </p>
-                                            <p class="category uppercase text-white">
-                                                <img src="{{ asset('site/assets/icons/play.svg') }}" alt="play">
-                                                1
-                                            </p>
-                                        </div>
                                     </div>
                                     <p class="h6 card-box__title mb-8">
                                         <a href="{{ route('frontend.products.show', $product->slug) }}">{{ $product->title }}</a>
@@ -120,30 +110,15 @@
                                         </li>
                                         <li>
                                             <img src="{{ asset('site/assets/icons/calendar.svg') }}" alt="fuel">
-                                            <span>{{ optional($product->created_at)->format('Y') ?: '2022' }}</span>
-                                        </li>
-                                        <li>
-                                            <img src="{{ asset('site/assets/icons/gaspump.svg') }}" alt="fuel">
-                                            <span>{{ optional($product->category)->name ?: 'EV' }}</span>
+                                            <span>{{ optional($product->created_at)->format('d/m/Y') ?: '01/01/2022' }}</span>
                                         </li>
                                     </ul>
 
-                                    <p class="card-box__price mb-15">
-                                        {{ $product->price !== null ? number_format((float) $product->price, 0, ',', '.') . ' đ' : 'Liên hệ' }}
-                                    </p>
-
                                     <div class="divider mb-15"></div>
 
-                                    <div class="flex justify-between">
-                                        <p class="compare-details btn btn-small">
-                                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <g clip-path="url(#clip0_13399_19575)">
-                                                    <path d="M10 17.5C14.1421 17.5 17.5 14.1421 17.5 10C17.5 5.85786 14.1421 2.5 10 2.5C5.85786 2.5 2.5 5.85786 2.5 10C2.5 14.1421 5.85786 17.5 10 17.5Z" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                                    <path d="M6.875 10H13.125" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                                    <path d="M10 6.875V13.125" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                                </g>
-                                            </svg>
-                                            So sánh
+                                    <div class="flex justify-between items-center gap-12">
+                                        <p class="card-box__price mb-0">
+                                            {{ $product->price !== null ? number_format((float) $product->price, 0, ',', '.') . ' đ' : 'Liên hệ' }}
                                         </p>
 
                                         <a href="{{ route('frontend.products.show', $product->slug) }}" class="view-details">
