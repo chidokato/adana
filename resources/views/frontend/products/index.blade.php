@@ -27,7 +27,6 @@
             'title' => $latestProduct->title,
             'meta' => [
                 ['text' => optional($latestProduct->category)->name ?? 'Sản phẩm'],
-                ['text' => $latestProduct->price !== null ? number_format((float) $latestProduct->price, 0, ',', '.') . ' đ' : 'Liên hệ', 'class' => 'font-weight-600'],
             ],
         ];
     });

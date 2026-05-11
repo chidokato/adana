@@ -248,13 +248,14 @@
 .listing-sidebar-right .card-box .content .tag {
     display: flex;
     flex-wrap: nowrap;
+    justify-content: space-between;
     gap: 12px;
     overflow: hidden;
 }
 
 .listing-sidebar-right .card-box .content .tag li {
     min-width: 0;
-    flex: 1 1 0;
+    flex: 0 1 auto;
 }
 
 .listing-sidebar-right .card-box .content .tag li span {
@@ -262,6 +263,11 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.innerpage__sidebar .recent-post .title {
+    font-size: 16px;
+    line-height: 1.5;
 }
 
 @media (max-width: 1199px) {
