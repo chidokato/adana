@@ -220,6 +220,12 @@
     width: 100%;
 }
 
+.listing-details--sidebar {
+    position: sticky;
+    top: 110px;
+    align-self: flex-start;
+}
+
 .listing-sidebar-right .card-box-style-1 .image {
     height: 320px;
 }
@@ -380,6 +386,11 @@
     .about-page .service-grid,
     .about-page .customer-grid {
         grid-template-columns: 1fr;
+    }
+
+    .listing-details--sidebar {
+        position: static;
+        top: auto;
     }
 
     .about-page .about-box {

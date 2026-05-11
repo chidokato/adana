@@ -65,18 +65,6 @@
             <div class="listing-details--content">
                 <div class="title-section mb-40">
                     <h2 class="capitalize">{{ $product->title }}</h2>
-                    <div class="flex items-center justify-end gap-12">
-                        <a href="{{ route('frontend.contact') }}" class="btn btn-medium btn-line padding-button-medium gap-5 font-weight-600">
-                            <img src="{{ asset('site/assets/icons/PhoneCall.svg') }}" alt="phone">
-                            Liên hệ tư vấn
-                        </a>
-
-                        <a href="tel:{{ preg_replace('/\s+/', '', $siteSetting->hotline ?? '') }}" class="btn-icon-circle hover-fill-white">
-                            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M22.4458 19.8335V22.1668C22.4458 22.7857 22.1999 23.3792 21.7623 23.8168C21.3248 24.2543 20.7313 24.5002 20.1124 24.5002C10.4516 24.5002 2.61243 16.6611 2.61243 7.00016C2.61243 6.38133 2.85826 5.78783 3.29582 5.35027C3.73338 4.91272 4.32686 4.66683 4.94576 4.66683H7.2791C7.82662 4.66626 8.35547 4.85824 8.77392 5.20916C9.19237 5.56008 9.47392 6.04751 9.56826 6.58683L9.9641 8.92016C10.0369 9.34054 9.99412 9.77279 9.84043 10.1712C9.68673 10.5695 9.42809 10.919 9.0916 11.1827L7.6416 12.3435C8.96897 15.2156 11.2906 17.5372 14.1624 18.8647L15.3233 17.4147C15.5869 17.0782 15.9364 16.8195 16.3348 16.6658C16.7331 16.5121 17.1654 16.4693 17.5858 16.5422L19.9191 16.938C20.4585 17.0323 20.9459 17.3139 21.2968 17.7323C21.6477 18.1508 21.8397 18.6796 21.8391 19.2272" stroke="#1C1C1C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                        </a>
-                    </div>
                 </div>
 
                 <div class="swiper swiper-listing-details-main">
@@ -159,20 +147,6 @@
                                 <span class="h7 text-secondary">Danh mục:</span>
                             </p>
                             <span class="h7 font-weight-500 pl-28">{{ optional($product->category)->name ?: 'Đang cập nhật' }}</span>
-                        </li>
-                        <li class="grid-cols-2 grid">
-                            <p class="flex items-center gap-8">
-                                <img class="w-28 h-28" src="{{ asset('site/assets/icons/QrCode.svg') }}" alt="images">
-                                <span class="h7 text-secondary">Số ảnh:</span>
-                            </p>
-                            <span class="h7 font-weight-500 pl-28">{{ $galleryImages->count() }}</span>
-                        </li>
-                        <li class="grid-cols-2 grid">
-                            <p class="flex items-center gap-8">
-                                <img class="w-28 h-28" src="{{ asset('site/assets/icons/MapPin.svg') }}" alt="address">
-                                <span class="h7 text-secondary">Địa chỉ:</span>
-                            </p>
-                            <span class="h7 font-weight-500 pl-28">{{ $siteSetting->address ?? 'Đang cập nhật' }}</span>
                         </li>
                         <li class="grid-cols-2 grid">
                             <p class="flex items-center gap-8">
