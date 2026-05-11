@@ -22,7 +22,7 @@
     });
     $sidebarRecentProducts = collect($latestProducts ?? [])->map(function ($latestProduct) {
         return [
-            'url' => route('frontend.products.show', $latestProduct->slug),
+            'url' => $latestProduct->frontend_url,
             'image' => $latestProduct->thumbnail ? asset($latestProduct->thumbnail) : asset('data/no_image.jpg'),
             'title' => $latestProduct->title,
             'meta' => [
@@ -85,21 +85,21 @@
                                     </p>
                                 </div>
                                 <div class="image">
-                                    <a href="{{ route('frontend.products.show', $product->slug) }}">
+                                    <a href="{{ $product->frontend_url }}">
                                         <img class="card--img" src="{{ $product->thumbnail ? asset($product->thumbnail) : asset('data/no_image.jpg') }}" alt="{{ $product->title }}">
                                     </a>
                                 </div>
                                 <div class="content border-light border-top-none">
                                     <div class="bottom">
                                         <p class="category uppercase text-white">
-                                            <a href="{{ route('frontend.products.show', $product->slug) }}" class="text-white uppercase text-xs">
+                                            <a href="{{ $product->frontend_url }}" class="text-white uppercase text-xs">
                                                 {{ optional($product->category)->name ?? 'Sản phẩm' }}
                                             </a>
                                         </p>
 
                                     </div>
                                     <p class="h6 card-box__title mb-8">
-                                        <a href="{{ route('frontend.products.show', $product->slug) }}">{{ $product->title }}</a>
+                                        <a href="{{ $product->frontend_url }}">{{ $product->title }}</a>
                                     </p>
 
                                     <ul class="tag mb-10">
@@ -120,7 +120,7 @@
                                             {{ $product->price !== null ? number_format((float) $product->price, 0, ',', '.') . ' đ' : 'Liên hệ' }}
                                         </p>
 
-                                        <a href="{{ route('frontend.products.show', $product->slug) }}" class="view-details">
+                                        <a href="{{ $product->frontend_url }}" class="view-details">
                                             Xem chi tiết
                                             <img class="ml-4" src="{{ asset('site/assets/icons/CaretCircleRight.svg') }}" alt="CaretCircleRight.svg">
                                         </a>

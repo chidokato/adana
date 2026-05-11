@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\HomeConfigController;
 use App\Http\Controllers\Admin\UploadController;
 use App\Http\Controllers\FrontendController;
 use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -34,23 +35,6 @@ Route::get('/', function () {
 Route::get('/gioi-thieu', [FrontendController::class, 'about'])->name('frontend.about');
 Route::get('/lien-he', [FrontendController::class, 'contact'])->name('frontend.contact');
 Route::get('/san-pham', [FrontendController::class, 'products'])->name('frontend.products');
-Route::get('/danh-muc-san-pham/{slug}', function ($slug) {
-    $category = Category::where('type', 'product')
-        ->where('slug', $slug)
-        ->firstOrFail();
-
-    return redirect()->to($category->frontend_url, 301);
-})->name('frontend.products.category');
-Route::get('/san-pham/{slug}', [FrontendController::class, 'productDetail'])->name('frontend.products.show');
-Route::get('/tin-tuc', [FrontendController::class, 'news'])->name('frontend.news');
-Route::get('/danh-muc-tin-tuc/{slug}', function ($slug) {
-    $category = Category::where('type', 'news')
-        ->where('slug', $slug)
-        ->firstOrFail();
-
-    return redirect()->to($category->frontend_url, 301);
-})->name('frontend.news.category');
-Route::get('/tin-tuc/{slug}', [FrontendController::class, 'newsDetail'])->name('frontend.news.show');
 
 Route::prefix('admin')->name('admin.')->group(function () {
     // Auth
@@ -164,6 +148,37 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('upload', [UploadController::class, 'store'])->name('upload');
     });
 });
+
+Route::get('/danh-muc-san-pham/{slug}', function ($slug) {
+    $category = Category::where('type', 'product')
+        ->where('slug', $slug)
+        ->firstOrFail();
+
+    return redirect()->to($category->frontend_url, 301);
+})->name('frontend.products.category');
+Route::get('/san-pham/{slug}', function ($slug) {
+    $product = Product::with('category')
+        ->where('slug', $slug)
+        ->where('status', 1)
+        ->firstOrFail();
+
+    return redirect()->to($product->frontend_url, 301);
+});
+Route::get('/tin-tuc', [FrontendController::class, 'news'])->name('frontend.news');
+Route::get('/danh-muc-tin-tuc/{slug}', function ($slug) {
+    $category = Category::where('type', 'news')
+        ->where('slug', $slug)
+        ->firstOrFail();
+
+    return redirect()->to($category->frontend_url, 301);
+})->name('frontend.news.category');
+Route::get('/tin-tuc/{slug}', [FrontendController::class, 'newsDetail'])->name('frontend.news.show');
+Route::get('/{category}/{slug}', [FrontendController::class, 'productDetail'])
+    ->where([
+        'category' => '[A-Za-z0-9\-]+',
+        'slug' => '[A-Za-z0-9\-]+',
+    ])
+    ->name('frontend.products.show');
 
 Route::get('/{slug}', [FrontendController::class, 'page'])
     ->where('slug', '[A-Za-z0-9\-]+')

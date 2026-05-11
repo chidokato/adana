@@ -15,7 +15,7 @@
     });
     $sidebarRecentProducts = collect($latestProducts ?? [])->map(function ($latestProduct) {
         return [
-            'url' => route('frontend.products.show', $latestProduct->slug),
+            'url' => $latestProduct->frontend_url,
             'image' => $latestProduct->thumbnail ? asset($latestProduct->thumbnail) : asset('data/no_image.jpg'),
             'title' => $latestProduct->title,
             'meta' => [

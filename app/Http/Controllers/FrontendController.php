@@ -70,9 +70,13 @@ class FrontendController extends Controller
         ]);
     }
 
-    public function productDetail($slug)
+    public function productDetail($categorySlug, $slug)
     {
         $product = Product::with('category', 'images')
+            ->whereHas('category', function ($query) use ($categorySlug) {
+                $query->where('slug', $categorySlug)
+                    ->where('type', 'product');
+            })
             ->where('slug', $slug)
             ->where('status', 1)
             ->firstOrFail();

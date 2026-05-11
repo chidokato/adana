@@ -24,7 +24,7 @@
     });
     $sidebarRecentProducts = collect($latestProducts ?? [])->map(function ($latestProduct) {
         return [
-            'url' => route('frontend.products.show', $latestProduct->slug),
+            'url' => $latestProduct->frontend_url,
             'image' => $latestProduct->thumbnail ? asset($latestProduct->thumbnail) : asset('data/no_image.jpg'),
             'title' => $latestProduct->title,
             'meta' => [
@@ -49,7 +49,7 @@
 <section class="background-light">
     <div class="container">
         <ul class="breadcrumb">
-            <li><a href="{{ url('/') }}">Home</a></li>
+            <li><a href="{{ url('/') }}">Trang chủ</a></li>
             <li><img src="{{ asset('site/assets/icons/right.svg') }}" alt="right"></li>
             <li><a href="{{ route('frontend.products') }}">Sản phẩm</a></li>
             <li><img src="{{ asset('site/assets/icons/right.svg') }}" alt="right"></li>
@@ -124,65 +124,20 @@
                     </div>
                 </div>
 
-                <p class="h4 mb-16">Description</p>
-                <p class="text-secondary mb-40">
-                    {{ $description ?: 'Thông tin mô tả ngắn của sản phẩm đang được cập nhật. Vui lòng xem nội dung chi tiết bên dưới hoặc liên hệ để được tư vấn nhanh.' }}
-                </p>
-
-                <div class="divider w-full mb-40"></div>
-
-                <p class="h4 mb-16 capitalize">Get To Know this product</p>
-
-                <div class="flat-tabs mb-40">
-                    <div class="overflow-x-auto mb-16">
-                        <ul class="menu-tab menu-tab-style4">
-                            <li class="active"><span class="text-secondary font-weight-600">Thông tin cơ bản</span></li>
-                        </ul>
-                    </div>
-
-                    <div class="content-tab">
-                        <div class="content-inner active">
-                            <ul class="grid grid-cols-3 xl-grid-cols-2 md-grid-cols-1 gap-8 gap-x-30">
-                                <li class="flex items-center gap-8">
-                                    <img src="{{ asset('site/assets/icons/check.svg') }}" alt="check">
-                                    Mã sản phẩm: {{ $product->product_code ?: 'Đang cập nhật' }}
-                                </li>
-                                <li class="flex items-center gap-8">
-                                    <img src="{{ asset('site/assets/icons/check.svg') }}" alt="check">
-                                    Danh mục: {{ optional($product->category)->name ?: 'Đang cập nhật' }}
-                                </li>
-                                <li class="flex items-center gap-8">
-                                    <img src="{{ asset('site/assets/icons/check.svg') }}" alt="check">
-                                    Giá: {{ $productPrice }}
-                                </li>
-                                <li class="flex items-center gap-8">
-                                    <img src="{{ asset('site/assets/icons/check.svg') }}" alt="check">
-                                    Năm đăng: {{ optional($product->created_at)->format('Y') ?: 'Đang cập nhật' }}
-                                </li>
-                                <li class="flex items-center gap-8">
-                                    <img src="{{ asset('site/assets/icons/check.svg') }}" alt="check">
-                                    Doanh nghiệp cung cấp: {{ $siteSetting->company_name ?? 'ADANA Group' }}
-                                </li>
-                                <li class="flex items-center gap-8">
-                                    <img src="{{ asset('site/assets/icons/check.svg') }}" alt="check">
-                                    Hỗ trợ tư vấn: {{ $siteSetting->hotline ?? 'Đang cập nhật' }}
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+                <div class="product-detail-summary mb-40">
+                    <p class="mb-0">
+                        {{ $description ?: 'Thông tin mô tả ngắn của sản phẩm đang được cập nhật. Vui lòng xem nội dung chi tiết bên dưới hoặc liên hệ để được tư vấn nhanh.' }}
+                    </p>
                 </div>
 
-                <div class="divider w-full mb-40"></div>
-
-                <p class="h4 mb-16">Nội dung chi tiết</p>
-                <div class="text-secondary mb-40">
+                <div class="product-detail-content text-secondary mb-40">
                     {!! $content ?: '<p>Thông tin chi tiết sản phẩm đang được cập nhật.</p>' !!}
                 </div>
             </div>
 
             <div class="listing-details--sidebar">
                 <div class="listing-details--sidebar-box mb-40">
-                    <p class="h5 mb-4 capitalize">Product Overview</p>
+                    <p class="h5 mb-4 capitalize">Tổng quan sản phẩm</p>
                     <ul class="car-overview-list-style2">
                         <li class="grid-cols-2 grid">
                             <p class="flex items-center gap-8">
@@ -193,10 +148,10 @@
                         </li>
                         <li class="grid-cols-2 grid">
                             <p class="flex items-center gap-8">
-                                <img class="w-28 h-28" src="{{ asset('site/assets/icons/calendar.svg') }}" alt="year">
-                                <span class="h7 text-secondary">Năm:</span>
+                                <img class="w-28 h-28" src="{{ asset('site/assets/icons/calendar.svg') }}" alt="date">
+                                <span class="h7 text-secondary">Ngày đăng:</span>
                             </p>
-                            <span class="h7 font-weight-500 pl-28">{{ optional($product->created_at)->format('Y') ?: 'Đang cập nhật' }}</span>
+                            <span class="h7 font-weight-500 pl-28">{{ optional($product->created_at)->format('d/m/Y') ?: 'Đang cập nhật' }}</span>
                         </li>
                         <li class="grid-cols-2 grid">
                             <p class="flex items-center gap-8">
@@ -232,7 +187,7 @@
                 <div class="listing-details--sidebar-box mb-40">
                     <div class="listing-details--contact">
                         <div class="listing-details--contact-dealer mb-28">
-                            <img src="{{ asset('site/assets/images/avatar/contact-avatar.png') }}" alt="dealer">
+                            <img src="{{ !empty($siteSetting->favicon) ? asset($siteSetting->favicon) : asset('site/assets/images/favicon.png') }}" alt="{{ $siteSetting->company_name ?? 'ADANA Group' }}">
 
                             <div class="content">
                                 <a href="{{ route('frontend.about') }}" class="h4 mb-8 font-weight-600">{{ $siteSetting->company_name ?? 'ADANA Group' }}</a>
