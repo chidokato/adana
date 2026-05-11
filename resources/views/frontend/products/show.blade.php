@@ -7,10 +7,12 @@
         ->filter()
         ->unique()
         ->values();
+
     $galleryImages = $galleryImages->isNotEmpty() ? $galleryImages : collect(['data/no_image.jpg']);
     $productPrice = $product->price !== null ? number_format((float) $product->price, 0, ',', '.') . ' đ' : 'Liên hệ';
     $description = trim(strip_tags($product->description ?: ''));
     $content = $product->content ?: $product->description;
+
     $sidebarMenuItems = collect($footerMenuItems ?? [])->flatMap(function ($item) {
         $children = collect($item->children ?? []);
         return $children->isNotEmpty() ? $children : collect([$item]);
@@ -22,6 +24,7 @@
             'active' => optional($product->category)->slug && $item->resolvedUrl() === $product->category->frontend_url,
         ];
     });
+
     $sidebarRecentProducts = collect($latestProducts ?? [])->map(function ($latestProduct) {
         return [
             'url' => $latestProduct->frontend_url,
@@ -33,6 +36,7 @@
             ],
         ];
     });
+
     $sidebarRecentNews = collect($latestNews ?? [])->map(function ($latestNewsItem) {
         return [
             'url' => route('frontend.news.show', $latestNewsItem->slug),
@@ -58,8 +62,9 @@
     </div>
 </section>
 
-<section class="pb-100">
+<section class="pb-100 product-details-page">
     <div class="tf-spacing-style4"></div>
+
     <div class="container">
         <div class="listing-details">
             <div class="listing-details--content">
@@ -67,48 +72,46 @@
                     <h2 class="capitalize">{{ $product->title }}</h2>
                 </div>
 
-                <div class="swiper swiper-listing-details-main">
-                    <div class="swiper-wrapper">
-                        @foreach($galleryImages as $image)
-                            <div class="swiper-slide">
-                                <div class="listing-details-item main-item relative">
-                                    <img class="img-main" src="{{ asset($image) }}" alt="{{ $product->title }}">
-                                    <div class="listing-details-item--content">
-                                        <a class="listing-details-item--button" href="{{ route('frontend.contact') }}">
-                                            <img src="{{ asset('site/assets/icons/ChatCircleDots.svg') }}" alt="chat">
-                                            Yêu cầu báo giá
-                                        </a>
-                                        <a class="listing-details-item--button" href="{{ asset($image) }}" target="_blank">
-                                            <img src="{{ asset('site/assets/icons/view-all-photo.svg') }}" alt="view">
-                                            Xem ảnh lớn
-                                        </a>
-                                    </div>
+                <div class="product-gallery-shell mb-40">
+                    <div class="swiper swiper-listing-details-main-style-2 style-2">
+                        <div class="swiper-wrapper">
+                            @foreach($galleryImages as $image)
+                                <div class="swiper-slide">
+                                    <a
+                                        class="image listing-details-item main-item relative"
+                                        href="{{ asset($image) }}"
+                                        data-fancybox="gallery-details-listing-6"
+                                    >
+                                        <img class="main w-full object-cover" src="{{ asset($image) }}" alt="{{ $product->title }}">
+                                    </a>
                                 </div>
-                            </div>
-                        @endforeach
+                            @endforeach
+                        </div>
+
+                        <div class="pagination-style-absolute swiper-pagination pagination-white pagination-style pagination-swiper-listing-details-main-style-2 mt-35"></div>
+
+                        <p class="swiper-button navigation-prev swiper-listing-details-main-prev">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M13.9487 2.71258C14.2097 2.97026 14.2335 3.37348 14.0199 3.65762L13.9487 3.73903L7.60622 10L13.9487 16.261C14.2097 16.5186 14.2335 16.9219 14.0199 17.206L13.9487 17.2874C13.6877 17.5451 13.2792 17.5685 12.9913 17.3577L12.9088 17.2874L6.04609 10.5132C5.78505 10.2555 5.76132 9.85232 5.9749 9.56818L6.04609 9.48678L12.9088 2.71258C13.196 2.42914 13.6615 2.42914 13.9487 2.71258Z" fill="white"/>
+                            </svg>
+                        </p>
+                        <p class="swiper-button navigation-next swiper-listing-details-main-next">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M6.0513 17.2874C5.79025 17.0297 5.76652 16.6265 5.98011 16.3424L6.0513 16.261L12.3938 10L6.0513 3.73903C5.79025 3.48135 5.76652 3.07813 5.98011 2.79399L6.0513 2.71258C6.31235 2.45491 6.72084 2.43148 7.00869 2.64231L7.09116 2.71258L13.9539 9.48678C14.215 9.74446 14.2387 10.1477 14.0251 10.4318L13.9539 10.5132L7.09116 17.2874C6.80401 17.5709 6.33845 17.5709 6.0513 17.2874Z" fill="white"/>
+                            </svg>
+                        </p>
                     </div>
 
-                    <p class="swiper-button navigation-prev swiper-listing-details-main-prev">
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M13.9487 2.71258C14.2097 2.97026 14.2335 3.37348 14.0199 3.65762L13.9487 3.73903L7.60622 10L13.9487 16.261C14.2097 16.5186 14.2335 16.9219 14.0199 17.206L13.9487 17.2874C13.6877 17.5451 13.2792 17.5685 12.9913 17.3577L12.9088 17.2874L6.04609 10.5132C5.78505 10.2555 5.76132 9.85232 5.9749 9.56818L6.04609 9.48678L12.9088 2.71258C13.196 2.42914 13.6615 2.42914 13.9487 2.71258Z" fill="white"/>
-                        </svg>
-                    </p>
-                    <p class="swiper-button navigation-next swiper-listing-details-main-next">
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M6.0513 17.2874C5.79025 17.0297 5.76652 16.6265 5.98011 16.3424L6.0513 16.261L12.3938 10L6.0513 3.73903C5.79025 3.48135 5.76652 3.07813 5.98011 2.79399L6.0513 2.71258C6.31235 2.45491 6.72084 2.43148 7.00869 2.64231L7.09116 2.71258L13.9539 9.48678C14.215 9.74446 14.2387 10.1477 14.0251 10.4318L13.9539 10.5132L7.09116 17.2874C6.80401 17.5709 6.33845 17.5709 6.0513 17.2874Z" fill="white"/>
-                        </svg>
-                    </p>
-                </div>
-
-                <div class="swiper swiper-listing-details-thumbs pb-60 overflow-hidden">
-                    <div class="swiper-wrapper">
-                        @foreach($galleryImages as $image)
-                            <div class="swiper-slide">
-                                <div class="listing-details-thumb">
-                                    <img src="{{ asset($image) }}" alt="{{ $product->title }}">
+                    <div class="swiper swiper-listing-details-thumbs-style-2">
+                        <div class="swiper-wrapper">
+                            @foreach($galleryImages as $image)
+                                <div class="swiper-slide">
+                                    <div class="listing-details-thumb">
+                                        <img src="{{ asset($image) }}" alt="{{ $product->title }}">
+                                    </div>
                                 </div>
-                            </div>
-                        @endforeach
+                            @endforeach
+                        </div>
                     </div>
                 </div>
 
@@ -161,10 +164,10 @@
                 <div class="listing-details--sidebar-box mb-40">
                     <div class="listing-details--contact">
                         <div class="listing-details--contact-dealer mb-28">
-                            <img src="{{ !empty($siteSetting->favicon) ? asset($siteSetting->favicon) : asset('site/assets/images/favicon.png') }}" alt="{{ $siteSetting->company_name ?? 'ADANA Group' }}">
+                            <img src="{{ !empty($siteSetting->favicon) ? asset($siteSetting->favicon) : asset('site/assets/images/favicon.png') }}" alt="{{ $siteSetting->company_name ?? 'ADANA Chemicals' }}">
 
                             <div class="content">
-                                <a href="{{ route('frontend.about') }}" class="h4 mb-8 font-weight-600">{{ $siteSetting->company_name ?? 'ADANA Group' }}</a>
+                                <a href="{{ route('frontend.about') }}" class="h4 mb-8 font-weight-600">{{ $siteSetting->company_name ?? 'ADANA Chemicals' }}</a>
                                 <div class="verify">
                                     <img src="{{ asset('site/assets/icons/SealCheck.svg') }}" alt="verified">
                                     <p class="text-highlight text-sm">Đơn vị cung cấp</p>
