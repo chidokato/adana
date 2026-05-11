@@ -26,4 +26,24 @@ class Category extends Model
     {
         return $this->hasMany(Category::class, 'parent_id');
     }
+
+    public function getFrontendUrlAttribute(): string
+    {
+        return url($this->slug);
+    }
+
+    public function descendantIds(): array
+    {
+        $children = $this->relationLoaded('children')
+            ? $this->children
+            : $this->children()->get();
+
+        $ids = $children->pluck('id')->all();
+
+        foreach ($children as $child) {
+            $ids = array_merge($ids, $child->descendantIds());
+        }
+
+        return array_values(array_unique($ids));
+    }
 }

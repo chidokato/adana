@@ -3,9 +3,19 @@
 @section('content')
 @php
     $aboutConfig = $homeConfigs->get('about');
+    $introConfig = $homeConfigs->get('intro_section');
     $companyName = $siteSetting->company_name ?? config('app.name', 'ADANA Group');
-    $mainImage = !empty(optional($aboutConfig)->image) ? asset(optional($aboutConfig)->image) : asset('site/assets/images/pages/about-1.jpg');
-    $subImage = asset('site/assets/images/pages/about-2.jpg');
+    $aboutTitle = optional($aboutConfig)->title ?: optional($introConfig)->title ?: $companyName;
+    $aboutLead = optional($aboutConfig)->content
+        ?: optional($introConfig)->content
+        ?: optional($introConfig)->description
+        ?: ('<p>' . e($siteSetting->short_intro ?? 'ADANA Group cung cấp giải pháp trọn gói trong lĩnh vực HVAC, vật tư tiêu hao, hóa chất công nghiệp và gia công cơ khí theo yêu cầu.') . '</p>');
+    $mainImage = !empty(optional($aboutConfig)->image)
+        ? asset(optional($aboutConfig)->image)
+        : (!empty(optional($introConfig)->image) ? asset(optional($introConfig)->image) : asset('site/assets/images/pages/about-1.jpg'));
+    $subImage = !empty(optional($aboutConfig)->sub_image)
+        ? asset(optional($aboutConfig)->sub_image)
+        : (!empty(optional($introConfig)->sub_image) ? asset(optional($introConfig)->sub_image) : asset('site/assets/images/pages/about-2.jpg'));
     $phone = $siteSetting->hotline ?? '0936 361 248';
     $email = $siteSetting->email ?? 'contact@adanagroup.com';
     $shortIntro = $siteSetting->short_intro ?: 'ADANA Group cung cấp giải pháp trọn gói trong lĩnh vực HVAC, vật tư tiêu hao, hóa chất công nghiệp và gia công cơ khí theo yêu cầu.';
@@ -28,34 +38,34 @@
 
             <div class="row items-center">
                 <div class="col-lg-6">
-                    <div class="about-box">
-                        <img class="main-img radius-16 wow fadeIn" data-wow-delay="0.1s" src="{{ $mainImage }}" alt="{{ $companyName }}">
-                        <div class="sub-img wow fadeInUp" data-wow-delay="0.2s">
+                    <div class="home-about-box wow fadeIn" data-wow-delay="0.1s">
+                        <img class="main-img radius-16 mb-32" src="{{ $mainImage }}" alt="{{ $aboutTitle }}">
+                        <div class="sub-img wow fadeInUp mb-32" data-wow-delay="0.2s">
                             <img src="{{ $subImage }}" alt="{{ $companyName }}">
                         </div>
                     </div>
                 </div>
 
                 <div class="col-lg-6">
-                    <div class="about-content">
-                        <h2 class="font-weight-600 mb-20">{{ $companyName }}</h2>
-                        <p class="intro-lead mb-20">{{ $shortIntro }}</p>
+                    <div class="home-about-content wow fadeInUp" data-wow-delay="0.2s">
+                        <h2 class="font-weight-600 mb-20">{{ $aboutTitle }}</h2>
+                        <div class="intro-lead mb-20 text-justify">{!! $aboutLead !!}</div>
                         <p class="intro-lead mb-28">
                             ADANA Group được thành lập từ mong muốn mang đến cho khách hàng một dịch vụ trọn gói hoàn thiện hơn, vượt lên trên sự thỏa mãn thông thường bằng tiêu chuẩn rõ ràng, chất lượng dịch vụ ổn định, sản phẩm phù hợp và hệ thống quản lý tiên tiến.
                         </p>
 
-                        <ul class="flex flex-col gap-24 mb-32">
+                        <ul class="flex flex-col gap-12 mb-20">
                             <li class="flex gap-12">
                                 <img class="w-24 h-24" src="{{ asset('site/assets/icons/check.svg') }}" alt="check">
-                                <p class="h5">Một đầu mối liên hệ cho nhiều hạng mục kỹ thuật, thiết bị và vật tư.</p>
+                                <p class="h7">Một đầu mối liên hệ cho nhiều hạng mục kỹ thuật, thiết bị và vật tư.</p>
                             </li>
                             <li class="flex gap-12">
                                 <img class="w-24 h-24" src="{{ asset('site/assets/icons/check.svg') }}" alt="check">
-                                <p class="h5">Kết hợp dịch vụ, sản xuất, cung ứng và hậu mãi trong cùng hệ sinh thái.</p>
+                                <p class="h7">Kết hợp dịch vụ, sản xuất, cung ứng và hậu mãi trong cùng hệ sinh thái.</p>
                             </li>
                             <li class="flex gap-12">
                                 <img class="w-24 h-24" src="{{ asset('site/assets/icons/check.svg') }}" alt="check">
-                                <p class="h5">Đồng hành cùng nhà máy, tòa nhà và doanh nghiệp bằng giải pháp sát nhu cầu thực tế.</p>
+                                <p class="h7">Đồng hành cùng nhà máy, tòa nhà và doanh nghiệp bằng giải pháp sát nhu cầu thực tế.</p>
                             </li>
                         </ul>
 

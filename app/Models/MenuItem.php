@@ -63,8 +63,8 @@ class MenuItem extends Model
             ->where('status', 1)
             ->first();
 
-        if ($productCategory && app('router')->has('frontend.products.category')) {
-            return route('frontend.products.category', $productCategory->slug);
+        if ($productCategory) {
+            return $productCategory->frontend_url;
         }
 
         $newsCategory = Category::where('type', 'news')
@@ -72,8 +72,8 @@ class MenuItem extends Model
             ->where('status', 1)
             ->first();
 
-        if ($newsCategory && app('router')->has('frontend.news.category')) {
-            return route('frontend.news.category', $newsCategory->slug);
+        if ($newsCategory) {
+            return $newsCategory->frontend_url;
         }
 
         return url($url);

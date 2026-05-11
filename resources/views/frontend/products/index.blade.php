@@ -11,7 +11,7 @@
         return $children->isNotEmpty() ? $children : collect([$item]);
     })->take(12)->map(function ($item) use ($currentCategory) {
         $resolvedUrl = $item->resolvedUrl();
-        $currentCategoryUrl = isset($currentCategory) ? route('frontend.products.category', $currentCategory->slug) : route('frontend.products');
+        $currentCategoryUrl = isset($currentCategory) ? $currentCategory->frontend_url : route('frontend.products');
 
         return [
             'label' => $item->label,
@@ -48,68 +48,25 @@
     <div class="container">
         <ul class="breadcrumb">
             <li>
-                <a href="{{ url('/') }}">Home</a>
+                <a href="{{ url('/') }}">Trang chủ</a>
             </li>
             <li>
                 <img src="{{ asset('site/assets/icons/right.svg') }}" alt="chevron-right">
             </li>
             <li>
-                <span>Listing</span>
+                <span>Sản phẩm</span>
             </li>
         </ul>
     </div>
 </section>
 
 <section class="pb-100">
-    <div class="container">
-        <h2>Listing Sidebar Right</h2>
+    <div class="container mb-8">
+        <h2>Danh sách sản phẩm</h2>
     </div>
-    <div class="tf-spacing-style3"></div>
 
     <div class="container listing-sidebar-right">
         <div class="listing-sidebar-right__content md-mb-30 flat-tabs" data-custom="true">
-            <div class="row mb-24">
-                <div class="col-xxl-5 col-6 flex items-center">
-                    <div class="flex items-center gap-16 md-justify-between md-w-full">
-                        <p class="md-hidden">Showing {{ $startItem }} - {{ $endItem }} of {{ $totalItems }} Listings</p>
-                    </div>
-                </div>
-
-                <div class="col-md-2 col-4 xl2-hidden">
-                    <div class="flex items-center py-12 justify-center listing-tabs menu-tab">
-                        <span class="item-menu active">
-                            <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="3" cy="6" r="2.5" stroke="#9FA1A4"/>
-                                <circle cx="11" cy="6" r="2.5" stroke="#9FA1A4"/>
-                                <circle cx="19" cy="6" r="2.5" stroke="#9FA1A4"/>
-                                <circle cx="3" cy="14" r="2.5" stroke="#9FA1A4"/>
-                                <circle cx="11" cy="14" r="2.5" stroke="#9FA1A4"/>
-                                <circle cx="19" cy="14" r="2.5" stroke="#9FA1A4"/>
-                            </svg>
-                        </span>
-                    </div>
-                </div>
-
-                <div class="col-xxl-5 col-6">
-                    <div class="flex items-center h-full gap-8 justify-end">
-                        <p class="md-hidden">Sort Vehicles by</p>
-                        <div class="core-dropdown">
-                            <button class="core-dropdown__button" type="button" id="coreDropdownBtn">
-                                <span class="core-dropdown__selected">Lowest Price</span>
-                                <img src="{{ asset('site/assets/icons/chevron-down-primary.svg') }}" alt="chevron" class="core-dropdown__icon">
-                            </button>
-                            <div class="core-dropdown__menu" id="coreDropdownMenu">
-                                <ul class="core-dropdown__list">
-                                    <li class="core-dropdown__item"><a href="#" class="core-dropdown__option active" data-value="lowest-price">Lowest Price</a></li>
-                                    <li class="core-dropdown__item"><a href="#" class="core-dropdown__option" data-value="highest-price">Highest Price</a></li>
-                                    <li class="core-dropdown__item"><a href="#" class="core-dropdown__option" data-value="newest-listed">Newest Listed</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <div class="content-tab">
                 <div class="content-inner active">
                     <div class="grid grid-cols-3 lg-grid-cols-2 sm-grid-cols-1 gap-x-30 gap-y-41 mb-28">
@@ -117,7 +74,7 @@
                             <div class="card-box card-box-style-1 wow fadeIn" data-wow-delay="{{ number_format(min(($loop->iteration * 0.1), 0.9), 1) }}s">
                                 <div class="top">
                                     <p class="{{ $loop->iteration % 3 === 1 ? 'bg-primary-2 text-white highlight' : ($loop->iteration % 3 === 2 ? 'bg-green text-white highlight' : '') }}">
-                                        {{ $loop->iteration % 3 === 1 ? 'Special' : ($loop->iteration % 3 === 2 ? 'Great Price' : '') }}
+                                        {{ $loop->iteration % 3 === 1 ? 'Nổi bật' : ($loop->iteration % 3 === 2 ? 'Giá tốt' : '') }}
                                     </p>
 
                                     <p class="heart">
@@ -137,7 +94,7 @@
                                     <div class="bottom">
                                         <p class="category uppercase text-white">
                                             <a href="{{ route('frontend.products.show', $product->slug) }}" class="text-white uppercase text-xs">
-                                                {{ optional($product->category)->name ?? 'Product' }}
+                                                {{ optional($product->category)->name ?? 'Sản phẩm' }}
                                             </a>
                                         </p>
 
@@ -190,11 +147,11 @@
                                                     <path d="M10 6.875V13.125" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                                 </g>
                                             </svg>
-                                            Compare
+                                            So sánh
                                         </p>
 
                                         <a href="{{ route('frontend.products.show', $product->slug) }}" class="view-details">
-                                            View details
+                                            Xem chi tiết
                                             <img class="ml-4" src="{{ asset('site/assets/icons/CaretCircleRight.svg') }}" alt="CaretCircleRight.svg">
                                         </a>
                                     </div>
@@ -203,8 +160,8 @@
                         @empty
                             <div class="card-box card-box-style-1">
                                 <div class="content border-light">
-                                    <p class="h6 card-box__title mb-4">No products found</p>
-                                    <p class="text-secondary clamp-1 clamp mb-8">Please try another keyword or browse all categories.</p>
+                                    <p class="h6 card-box__title mb-4">Không tìm thấy sản phẩm</p>
+                                    <p class="text-secondary clamp-1 clamp mb-8">Vui lòng thử từ khóa khác hoặc xem tất cả danh mục.</p>
                                 </div>
                             </div>
                         @endforelse

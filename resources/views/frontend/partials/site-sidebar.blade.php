@@ -2,9 +2,9 @@
     $sidebarSearchAction = $sidebarSearchAction ?? null;
     $sidebarSearchName = $sidebarSearchName ?? 'q';
     $sidebarSearchValue = $sidebarSearchValue ?? '';
-    $sidebarSearchPlaceholder = $sidebarSearchPlaceholder ?? 'Search products...';
-    $sidebarCategoryTitle = $sidebarCategoryTitle ?? 'Categories';
-    $sidebarRecentTitle = $sidebarRecentTitle ?? 'Recent posts';
+    $sidebarSearchPlaceholder = $sidebarSearchPlaceholder ?? 'Tìm kiếm sản phẩm...';
+    $sidebarCategoryTitle = $sidebarCategoryTitle ?? 'Danh mục';
+    $sidebarRecentTitle = $sidebarRecentTitle ?? 'Bài viết mới';
     $sidebarCategories = collect($sidebarCategories ?? []);
     $sidebarRecentPosts = collect($sidebarRecentPosts ?? []);
     $sidebarAdditionalRecentSections = collect($sidebarAdditionalRecentSections ?? []);
@@ -53,7 +53,7 @@
             @foreach($sidebarRecentPosts as $recent)
                 <a href="{{ $recent['url'] ?? '#' }}" class="recent-post overflow-hidden mb-16">
                     <div class="image">
-                        <img class="post--img flex" src="{{ $recent['image'] ?? asset('data/no_image.jpg') }}" alt="{{ $recent['title'] ?? 'post' }}">
+                        <img class="post--img flex" src="{{ $recent['image'] ?? asset('data/no_image.jpg') }}" alt="{{ $recent['title'] ?? 'bài viết' }}">
                     </div>
                     <div class="content">
                         @if(!empty($recent['meta']))
@@ -79,12 +79,12 @@
         @endphp
         @if($sectionPosts->isNotEmpty())
             <div class="divider mb-32 w-full"></div>
-            <p class="h4 mb-16 capitalize">{{ $section['title'] ?? 'Recent posts' }}</p>
+            <p class="h4 mb-16 capitalize">{{ $section['title'] ?? 'Bài viết mới' }}</p>
             <div class="mb-32">
                 @foreach($sectionPosts as $recent)
                     <a href="{{ $recent['url'] ?? '#' }}" class="recent-post overflow-hidden mb-16">
                         <div class="image">
-                            <img class="post--img flex" src="{{ $recent['image'] ?? asset('data/no_image.jpg') }}" alt="{{ $recent['title'] ?? 'post' }}">
+                            <img class="post--img flex" src="{{ $recent['image'] ?? asset('data/no_image.jpg') }}" alt="{{ $recent['title'] ?? 'bài viết' }}">
                         </div>
                         <div class="content">
                             @if(!empty($recent['meta']))

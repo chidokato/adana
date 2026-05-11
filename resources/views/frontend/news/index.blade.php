@@ -5,7 +5,7 @@
     $currentNewsCategory = $currentNewsCategory ?? null;
     $keyword = request('q');
     $currentUrl = isset($currentNewsCategory)
-        ? route('frontend.news.category', $currentNewsCategory->slug)
+        ? $currentNewsCategory->frontend_url
         : route('frontend.news');
     $recentPosts = $homeNews->take(4);
     $sidebarCategories = collect([
@@ -18,7 +18,7 @@
     ])->merge(collect($newsCategories ?? [])->map(function ($category) use ($currentNewsCategory, $newsCategoryCounts) {
         return [
             'label' => $category->name,
-            'url' => route('frontend.news.category', $category->slug),
+            'url' => $category->frontend_url,
             'count' => $newsCategoryCounts[$category->id] ?? 0,
             'active' => isset($currentNewsCategory) && $currentNewsCategory->id === $category->id,
         ];

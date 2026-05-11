@@ -19,7 +19,7 @@
             'label' => $item->label,
             'url' => $item->resolvedUrl(),
             'target' => $item->target ?: '_self',
-            'active' => optional($product->category)->slug && $item->resolvedUrl() === route('frontend.products.category', $product->category->slug),
+            'active' => optional($product->category)->slug && $item->resolvedUrl() === $product->category->frontend_url,
         ];
     });
     $sidebarRecentProducts = collect($latestProducts ?? [])->map(function ($latestProduct) {

@@ -210,7 +210,10 @@ class FrontendController extends Controller
     {
         $category = Category::where('type', 'product')
             ->where('slug', $slug)
+            ->with('children')
             ->firstOrFail();
+
+        $categoryIds = array_merge([$category->id], $category->descendantIds());
 
         $categories = Category::where('type', 'product')
             ->where('status', 1)
@@ -230,7 +233,7 @@ class FrontendController extends Controller
 
         $query = Product::with('category')
             ->where('status', 1)
-            ->where('category_id', $category->id)
+            ->whereIn('category_id', $categoryIds)
             ->latest('id');
 
         if ($request->filled('q')) {
@@ -254,8 +257,22 @@ class FrontendController extends Controller
         ]);
     }
 
-    public function page($slug)
+    public function page(Request $request, $slug)
     {
+        $category = Category::where('slug', $slug)
+            ->where('status', 1)
+            ->first();
+
+        if ($category) {
+            if ($category->type === 'product') {
+                return $this->productCategory($request, $slug);
+            }
+
+            if ($category->type === 'news') {
+                return $this->newsCategory($request, $slug);
+            }
+        }
+
         $menuItem = MenuItem::where('url', $slug)
             ->where('status', 1)
             ->orderBy('id')
