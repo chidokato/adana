@@ -3,9 +3,11 @@
 @section('content')
 @php
     $currentCategory = $currentCategory ?? null;
-    $startItem = $products->firstItem() ?? 0;
-    $endItem = $products->lastItem() ?? 0;
-    $totalItems = $products->total();
+    $keyword = request('q');
+    $currentUrl = isset($currentCategory)
+        ? $currentCategory->frontend_url
+        : route('frontend.products');
+
     $sidebarMenuItems = collect($footerMenuItems ?? [])->flatMap(function ($item) {
         $children = collect($item->children ?? []);
         return $children->isNotEmpty() ? $children : collect([$item]);
@@ -20,6 +22,7 @@
             'active' => $resolvedUrl === $currentCategoryUrl,
         ];
     });
+
     $sidebarRecentProducts = collect($latestProducts ?? [])->map(function ($latestProduct) {
         return [
             'url' => $latestProduct->frontend_url,
@@ -30,6 +33,7 @@
             ],
         ];
     });
+
     $sidebarRecentNews = collect($latestNews ?? [])->map(function ($latestNewsItem) {
         return [
             'url' => route('frontend.news.show', $latestNewsItem->slug),
@@ -59,11 +63,11 @@
     </div>
 </section>
 
-<section class="pb-100">
-    <div class="container mb-8">
+<section class="pb-100 product-list-page">
+    <div class="container">
         <h2>Danh sách sản phẩm</h2>
     </div>
-
+    <div class="tf-spacing-style3 product-list-spacing"></div>
     <div class="container listing-sidebar-right">
         <div class="listing-sidebar-right__content md-mb-30 flat-tabs" data-custom="true">
             <div class="content-tab">
@@ -96,7 +100,6 @@
                                                 {{ optional($product->category)->name ?? 'Sản phẩm' }}
                                             </a>
                                         </p>
-
                                     </div>
                                     <p class="h6 card-box__title mb-8">
                                         <a href="{{ $product->frontend_url }}">{{ $product->title }}</a>
@@ -105,10 +108,10 @@
                                     <ul class="tag mb-10">
                                         <li>
                                             <img src="{{ asset('site/assets/icons/icon-gauge.svg') }}" alt="fuel">
-                                            <span>{{ $product->product_code ?: '32500 miles' }}</span>
+                                            <span>{{ $product->product_code ?: 'N/A' }}</span>
                                         </li>
                                         <li>
-                                            <img src="{{ asset('site/assets/icons/calendar.svg') }}" alt="fuel">
+                                            <img src="{{ asset('site/assets/icons/calendar.svg') }}" alt="calendar">
                                             <span>{{ optional($product->created_at)->format('d/m/Y') ?: '01/01/2022' }}</span>
                                         </li>
                                     </ul>
@@ -167,6 +170,10 @@
         <div class="listing-sidebar-right__filter">
             <div class="filter-sidebar-popup filter-sidebar-desktop md-hidden">
                 @include('frontend.partials.site-sidebar', [
+                    'sidebarSearchAction' => $currentUrl,
+                    'sidebarSearchName' => 'q',
+                    'sidebarSearchValue' => $keyword,
+                    'sidebarSearchPlaceholder' => 'Tìm kiếm sản phẩm...',
                     'sidebarCategoryTitle' => 'Danh mục sản phẩm',
                     'sidebarCategories' => $sidebarMenuItems,
                     'sidebarRecentTitle' => 'Sản phẩm mới nhất',

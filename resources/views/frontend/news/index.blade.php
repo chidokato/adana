@@ -69,11 +69,11 @@
     </div>
 </section>
 
-<section class="pb-100">
+<section class="pb-100 news-list-page">
     <div class="container">
         <h2>Danh sách tin tức</h2>
     </div>
-    <div class="tf-spacing-style3"></div>
+    <div class="tf-spacing-style3 news-list-spacing"></div>
 
     <div class="container innerpage-container">
         <div class="innerpage__content md-mb-30">
