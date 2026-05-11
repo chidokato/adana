@@ -25,7 +25,6 @@
     <section class="pb-100">
         <div class="container">
             <h2>Giới thiệu</h2>
-            <div class="tf-spacing-style3"></div>
 
             <div class="row items-center">
                 <div class="col-lg-6">

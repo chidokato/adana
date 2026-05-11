@@ -20,35 +20,11 @@
                     </div>
                 </div>
 
-                <div class="col-lg-2">
+                <div class="col-lg-3">
                     <div class="footer-links">
                         <div class="collapse mt-4">
                             <p class="font-weight-600 text-white mb-14 collapse-title justify-between" data-breakpoint="mobile">
                                 DANH MỤC SẢN PHẨM
-                                <span class="icon text-white hidden md-block">+</span>
-                            </p>
-                            <ul class="widget-links collapse-content md-hidden">
-                                @if(!empty($menuProductCategories) && $menuProductCategories->count())
-                                    @foreach($menuProductCategories as $category)
-                                        <li>
-                                            <a href="{{ route('frontend.products.category', $category->slug ?: $category->id) }}">
-                                                {{ $category->name }}
-                                            </a>
-                                        </li>
-                                    @endforeach
-                                @else
-                                    <li><a href="javascript:void(0)">Chưa có danh mục sản phẩm</a></li>
-                                @endif
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-2">
-                    <div class="footer-links">
-                        <div class="collapse mt-4">
-                            <p class="font-weight-600 text-white mb-14 collapse-title justify-between" data-breakpoint="mobile">
-                                MENU FOOTER
                                 <span class="icon text-white hidden md-block">+</span>
                             </p>
                             <ul class="widget-links collapse-content md-hidden">
@@ -68,7 +44,7 @@
                     </div>
                 </div>
 
-                <div class="col-lg-3">
+                <div class="col-lg-4">
                     <div class="footer-contact">
                         <div>
                             @if(!empty($siteSetting->company_name))
