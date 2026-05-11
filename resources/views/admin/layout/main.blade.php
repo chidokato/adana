@@ -174,13 +174,13 @@
                 <div class="navbar-header">
                     <div class="d-flex">
                         <div class="navbar-brand-box horizontal-logo">
-                            <a href="{{ route('admin.dashboard') }}" class="logo logo-dark text-decoration-none">
+                            <a href="{{ url('/') }}" class="logo logo-dark text-decoration-none" target="_blank" rel="noopener noreferrer">
                                 <span class="d-flex align-items-center gap-2">
                                     <img src="{{ asset('admin-assets/images/logo-sm.png') }}" alt="Adana" height="28">
                                     <span class="admin-logo-text text-dark">Ada<span>na</span></span>
                                 </span>
                             </a>
-                            <a href="{{ route('admin.dashboard') }}" class="logo logo-light text-decoration-none">
+                            <a href="{{ url('/') }}" class="logo logo-light text-decoration-none" target="_blank" rel="noopener noreferrer">
                                 <span class="d-flex align-items-center gap-2">
                                     <img src="{{ asset('admin-assets/images/logo-sm.png') }}" alt="Adana" height="28">
                                     <span class="admin-logo-text text-white">Ada<span>na</span></span>
@@ -233,13 +233,13 @@
 
         <div class="app-menu navbar-menu">
             <div class="navbar-brand-box">
-                <a href="{{ route('admin.dashboard') }}" class="logo logo-dark text-decoration-none">
+                <a href="{{ url('/') }}" class="logo logo-dark text-decoration-none" target="_blank" rel="noopener noreferrer">
                     <span class="d-flex align-items-center gap-2">
                         <img src="{{ asset('admin-assets/images/logo-sm.png') }}" alt="Adana" height="28">
                         <span class="admin-logo-text text-dark">Ada<span>na</span></span>
                     </span>
                 </a>
-                <a href="{{ route('admin.dashboard') }}" class="logo logo-light text-decoration-none">
+                <a href="{{ url('/') }}" class="logo logo-light text-decoration-none" target="_blank" rel="noopener noreferrer">
                     <span class="d-flex align-items-center gap-2">
                         <img src="{{ asset('admin-assets/images/logo-sm.png') }}" alt="Adana" height="28">
                         <span class="admin-logo-text text-white">Ada<span>na</span></span>
