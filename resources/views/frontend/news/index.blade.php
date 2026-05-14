@@ -12,22 +12,6 @@
     $gridNews = $newsList->slice(1)->values();
     $recentPosts = $homeNews->take(4);
 
-    $sidebarCategories = collect([
-        [
-            'label' => 'Tất cả tin tức',
-            'url' => route('frontend.news'),
-            'count' => $totalNewsCount ?? $newsList->total(),
-            'active' => !isset($currentNewsCategory),
-        ],
-    ])->merge(collect($newsCategories ?? [])->map(function ($category) use ($currentNewsCategory, $newsCategoryCounts) {
-        return [
-            'label' => $category->name,
-            'url' => $category->frontend_url,
-            'count' => $newsCategoryCounts[$category->id] ?? 0,
-            'active' => isset($currentNewsCategory) && $currentNewsCategory->id === $category->id,
-        ];
-    }));
-
     $sidebarRecentPosts = $recentPosts->map(function ($recent) {
         return [
             'url' => route('frontend.news.show', $recent->slug),
@@ -180,8 +164,6 @@
             'sidebarSearchName' => 'q',
             'sidebarSearchValue' => $keyword,
             'sidebarSearchPlaceholder' => 'Tìm kiếm tin tức...',
-            'sidebarCategoryTitle' => 'Danh mục tin tức',
-            'sidebarCategories' => $sidebarCategories,
             'sidebarRecentTitle' => 'Bài viết mới nhất',
             'sidebarRecentPosts' => $sidebarRecentPosts,
         ])

@@ -8902,7 +8902,7 @@ body.is_dark {
 }
 
 .blog-details-banner {
-  height: 762px;
+  height: 462px;
   position: relative;
 }
 .blog-details-banner .breadcrumb-wrapper {
@@ -9054,7 +9054,7 @@ body.is_dark {
   padding: 60px 60px 0;
 }
 .bloc-details-container .title-2 {
-  font-size: 56px;
+  font-size: 25px;
   line-height: 1.21;
 }
 .bloc-details-container .listing-details--contact-dealer {
@@ -18295,7 +18295,7 @@ xpush
     border-right: none !important;
   }
   .bloc-details-container .title-2 {
-    font-size: 32px;
+    font-size: 25px;
     line-height: 1.2;
   }
   .bloc-details-container {
@@ -18616,7 +18616,7 @@ xpush
     padding: 0;
   }
   .blog-details-banner {
-    height: 500px;
+    height: 462px;
   }
   .md-mt-16 {
     margin-top: 16px !important;
