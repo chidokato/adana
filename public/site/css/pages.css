@@ -228,17 +228,24 @@
 
 .listing-sidebar-right .card-box-style-1 .image {
     height: 320px;
+    padding: 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 22px 22px 0 0;
+    background: #fff;
+    overflow: hidden;
 }
 
 .listing-sidebar-right .card-box-style-1 .image > a,
 .listing-sidebar-right .card-box-style-1 .image .card--img {
     width: 100%;
     height: 100%;
+    display: block;
 }
 
 .listing-sidebar-right .card-box-style-1 .image .card--img {
     object-fit: cover;
     object-position: center;
+    border-radius: 14px;
 }
 
 .listing-sidebar-right .card-box .content .card-box__title,
